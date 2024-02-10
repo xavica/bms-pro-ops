@@ -1,0 +1,94 @@
+<template>
+    <section>
+        <form class="form" submit.delegate="login()">
+            <div class="login-content loginform-media">
+                <div class="lc-block toggled" id="l-login">
+                    <h4 style="text-align: center;color:#ff961e;font-family: monospace;font-size: 22px;">ViWITO SUPPORT
+                        MEMBER LOGIN</h4>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="zmdi zmdi-account" style="color:#ff961e"></i>
+                            </span>
+                            <div class="fg-line">
+                                <input type="text" style="background-color: transparent;color:rgb(0, 0, 0);font-size: 16px;"
+                                    class="form-control" placeholder="Username" value.bind="username & validate">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="zmdi zmdi-male" style="color:#ff961e"></i>
+                            </span>
+                            <div class="fg-line">
+                                <input type="password"
+                                    style="background-color: transparent;color:rgb(0, 0, 0);font-size: 16px;"
+                                    class="form-control" placeholder="Password" value.bind="password & validate">
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn bgm-log waves-effect waves-effect waves-button waves-float">
+                        Login
+                    </button>
+
+                    <div class="clearfix"></div>
+                    <br>
+                    <a style="text-align: center;color: #fff;" data-toggle="modal" href="#noAnimation">Forgot
+                        Password?</a>
+                    <div style="text-align: center;color: #fff;" class="input-group m-b-10">
+                        <button type="button" if.bind="debug" click.delegate="signup()"
+                            class="btn bgm-teal waves-effect waves-effect waves-button waves-float">
+                            signup
+                        </button>
+                    </div>
+                    <div if.bind="isLoading" style="text-align: center;">
+                        <div class="loginLoader">
+                        </div>
+                        <label
+                            style="color: #ff961e; font-size:16px ;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">Logging
+                            in please wait</label>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="modal" id="noAnimation" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="text-center">
+                        <h3>
+                            <i class="fa fa-lock fa-4x"></i>
+                        </h3>
+                        <h2 class="text-center">Forgot Password?</h2>
+                        <p>
+                            Enter your
+                            <strong class="wwp1">Email </strong> .We will send you a link to reset your password
+                        </p>
+                        <div class="panel-body">
+                            <form class="form" submit.delegate="sendLink()">
+                                <fieldset>
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <i class="zmdi zmdi-email"></i>
+                                            </span>
+                                            <div class="fg-line">
+                                                <input type="text" class="passwordemail-align form-control"
+                                                    id="username" placeholder="Email"
+                                                    value.bind="emailToReset & validate">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <button class="btn btn-lg btn-primary btn-block" type="submit">Send
+                                            Link</button>
+                                    </div>
+                                </fieldset>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>

@@ -1,0 +1,120 @@
+<template>
+    <section id="content">
+        <div class="container">
+            <div class="card ">
+                <div class="pmbb-header col-sm-1 crm-editiconalign">
+                    <a click.delegate="clearClicked()" role="button" title="Click To ClearAll"> <i
+                            class="zmdi zmdi-format-clear zmdi-hc-2x"></i></a>
+                </div>
+                <div class="card-body card-padding ">
+                    <div style="float: right">
+                        <button class="btn btn-primary" style="border-radius: 5px" type="button" data-toggle="collapse"
+                            click.delegate="createMerchant()">
+                            ADD MERCHANT
+                        </button>
+                    </div>
+                    <h3>Merchant</h3>
+                    <div class="row">
+                        <div class="col-sm-12 typeOne ">
+                            <h3><i class="md md-person m-r-5"></i> Basic Information</h3>
+                            <form class="form-horizontal" role="form">
+                                <div class="pmbb-body p-l-30 Data">
+                                    <div class="pmbb-edit">
+                                        <div class="col-sm-6 ">
+                                            <dl class="dl-horizontal form-group">
+                                                <dt class="p-t-10">Merchant ID</dt>
+                                                <dd>
+                                                    <div class="fg-line">
+                                                        <input type="text" class="form-control" placeholder=""
+                                                            value.bind="searchFields.id">
+
+
+                                                    </div>
+                                                </dd>
+                                            </dl>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <dl class="dl-horizontal form-group">
+                                                <dt class="p-t-5" style="margin-top:10px;">Mobile Number</dt>
+                                                <dd>
+                                                    <div class="fg-line">
+                                                        <input maxlength="10" type="number"
+                                                            class="forms form-control inputtypenumarrowhide"
+                                                            value.bind="searchFields.mobileNumber & validate"
+                                                            oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                                            onkeydown="return event.keyCode !== 69">
+                                                    </div>
+                                                </dd>
+                                            </dl>
+                                        </div>
+                                    </div>
+                                    <div class="pmbb-edit">
+                                        <div class="col-sm-6 ">
+                                            <dl class="dl-horizontal form-group">
+                                                <dt class="p-t-10">Name</dt>
+                                                <dd>
+                                                    <div class="fg-line">
+                                                        <input type="text" class="form-control" placeholder=""
+                                                            value.bind="searchFields.nameLowerCase
+                                                        ">
+                                                    </div>
+                                                </dd>
+                                            </dl>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <dl class="dl-horizontal form-group">
+                                                <dt class="p-t-5" style="margin-top:10px;">City</dt>
+                                                <dd>
+                                                    <div class="fg-line">
+                                                        <input type="text" class="form-control" placeholder=""
+                                                            value.bind="searchFields.city">
+                                                    </div>
+                                                </dd>
+                                            </dl>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class=" text-center">
+                    <button class="btn btn-primary waves-effect waves-button waves-float" type="button"
+                        data-toggle="collapse" data-target="#collapseExample" click.delegate="searchMerchants()"
+                        aria-expanded="false" aria-controls="collapseExample">
+                        SEARCH
+                    </button>
+                </div>
+                <br>
+                <div class="loader" if.bind="isLoading"></div>
+                <div class="card-body table-responsive tableHeadings" tabindex="0"
+                    style="overflow: hidden; outline: none;">
+                    <table class="table" show.bind="searchedMerchants.length > 0 && !isLoading">
+                        <thead>
+                            <tr>
+                                <th>Business Name</th>
+                                <th>Mobile Number</th>
+                                <th>Business Type</th>
+                                <th>Address</th>
+                                <th>City</th>
+                                <th>State</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="merchant clickable-row" repeat.for="merchant of searchedMerchants"
+                                class.bind="merchant.isActive ? 'ownFa':'partialFa'"
+                                click.delegate="rowClick(merchant)">
+                                <td>${merchant.businessName}</td>
+                                <td>${merchant.mobileNumber}</td>
+                                <td> ${merchant.businessTypeId | merchantBusinessType}</td>
+                                <td>${merchant.address.street},${merchant.address.area}</td>
+                                <td>${merchant.address.city}</td>
+                                <td>${merchant.address.state}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>

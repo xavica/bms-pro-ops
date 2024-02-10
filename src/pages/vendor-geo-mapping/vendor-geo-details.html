@@ -1,0 +1,268 @@
+<template>
+  <section id="content">
+    <div class="container">
+      <div class="card">
+        <div>
+          <h2 class="well well-sm cursorPointer" style="color: #58368e"><i click.delegate="goBack()"
+              class="zmdi zmdi-long-arrow-left"></i>
+            Vendor Geo Mapping</h2>
+          <div class="loader" if.bind="isLoader"></div>
+          <div class="noFoundMsg" if.bind="merchantDetails.length === 0 && !isLoader">
+            <label style="font-size: 30px;margin-top: 15px;">No Data Found</label>
+          </div>
+          <div class="row m-10">
+            <div class="col-sm-6 summerycard summeryTable" style="margin-left: 1%; border-radius: 2%">
+              <div class="col-sm-6">
+                <div><label class="f-w-b " style="font-size: 25px;">${merchantDetails.businessName}</label>
+                </div>
+                <div><label
+                    class="f-w-b c-black ">${merchantDetails.address.street},${merchantDetails.address.area}</label>
+                </div>
+              </div>
+              <div class="col-sm-1">
+                <div>
+                  <i class="zmdi zmdi-phone" style="margin-left: 500%;"></i>
+                  <label class="f-w-b c-black col-sm-5" style="margin-left: 600%;margin-top: -115%;
+                   ">${merchantDetails.mobileNumber}</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-body card-padding">
+            <div class="loader" if.bind="isLoading"></div>
+            <div style="margin-left: 25%;" if.bind="merchantId > 0">
+              <button style="width:270px;background: #614296;border-radius:10px 10px 10px 10px;"
+                class="fa-btn btn m-5 btn-primary btn-lg" click.delegate="downloadAreaWiseCustomers()">
+                Download Customer Data
+              </button>
+              <button style="width:220px;background: #614296;border-radius:10px 10px 10px 10px;"
+                class="fa-btn btn m-5 btn-primary btn-lg" href="#uploadLocation" data-toggle="modal">
+                Upload Location
+              </button>
+              <button style="width:220px;background: #614296;border-radius:10px 10px 10px 10px;"
+                class="fa-btn btn m-5 btn-primary btn-lg" disabled.bind="locationsList.length == 0"
+                click.delegate="downloadGeoJsonVendor()">
+                Download Location
+              </button>
+              <div class="modal" aria-hidden="false" id="uploadLocation" style="left:0px;" role="dialog">
+                <div style="width:1500px;padding-left: 37%">
+                  <div class="modal-content" style="width: 40%; margin-top:25%;text-align:center;">
+                    <div class="cardModal">
+                      <h4 class="well well-sm" style="text-align: left;font-weight: 700; ">Upload Location
+                        <i class="zmdi zmdi-close" style="margin-left: 50%;cursor: pointer;" data-dismiss="modal"></i>
+                      </h4>
+                      <label style="text-align: center;font-size:20px;color:blueviolet;">Upload Json </label>
+                    </div>
+                    <input type="file" id="fileGeoData" accept=".geojson" value.bind='fileVal'
+                      files.bind="selectedFiles" change.delegate="onSelectFile($event)" id="fileUploader" class="m-10">
+                    <!--  -->
+                    <h5 if.bind="locationMappedCompaniesList.length && selectedFiles" class="c-red">Caution :<p
+                        class="c-black">All
+                        Companies mapped to this Distributor will be
+                        unmapped.
+                      </p>
+                    </h5>
+                    <!--  -->
+                    <div style="text-align: center;">
+                      <button click.delegate="saveGeoData()" disabled.bind="!selectedFiles"
+                        class="btn btn-info waves-effect waves-button waves-float bg-close c-blueviolet m-b-10"
+                        style="background-color: blueviolet;border-radius:5px 5px 5px 5px;"
+                        data-dismiss="modal">Yes</button>
+                      <button style="background-color:grey;border-radius:5px 5px 5px 5px;"
+                        class="btn btn-info waves-effect waves-button waves-float c-blueviolet m-b-10 m-l-30"
+                        disabled.bind="!selectedFiles" data-dismiss="modal">Cancel </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <table class="table" style="border: 1px solid rgb(87, 67, 67);">
+                <thead>
+                  <td class="final" style="border: 1px solid rgb(87, 67, 67);"> <label class="final3"
+                      style="color: black;">Locations</label> </td>
+                  <td class="final" style="border: 1px solid rgb(87, 67, 67);"> <label class="final3"
+                      style="color:black;">Company</label> </td>
+                  <td class="final" style="border: 1px solid rgb(87, 67, 67);"> <label class="final3"
+                      style="color:black;">Actions</label> </td>
+                </thead>
+                <tbody>
+                  <tr if.bind="locationsList.length > 0" repeat.for="locationDetails of locationsList">
+                    <td class="w-25">${locationDetails.locationName}</td>
+                    <td class="w-50">${locationDetails.companyNames}</td>
+                    <td>
+                      <div style="display: flex;">
+                        <div class="m-l-10"
+                          click.delegate="openSideDrawer(locationDetails.companyIds,0,locationDetails.locationId)"><i
+                            class="zmdi zmdi-plus m-5"></i>
+                        </div>
+                        <div class="m-l-30 m-r-30"
+                          click.delegate="openSideDrawer(locationDetails.companyIds,1,locationDetails.locationId)"><i
+                            class="zmdi zmdi-time-restore m-5"></i></div>
+                        <div class="m-r-30"
+                          click.delegate="downloadLocationGeoJson(locationDetails.locationId, locationDetails.locationName)">
+                          <i class="zmdi zmdi-download m-5"></i>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr if.bind="locationsList.length == 0">
+                    <td>No data found</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div id="sidenav" class="navbar1" style="display:none;">
+          <div class="navbar1">
+            <div class="side-nav">
+              <div class=" pmbb-body propertyInformation">
+                <div class="pmbb-view">
+                  <div>
+                    <div>
+                      <div style="display: flex;">
+                        <a class="m-10" click.delegate="sideDrawerNav()">
+                          <i class="zmdi zmdi-arrow-left cursorPointer"></i>
+                        </a>
+                        <dt class="m-10 f-w-b f-20" class="c-black">${sideHeader}
+                        </dt>
+                      </div>
+                    </div>
+                    <div>
+                      <form>
+                        <div>
+                          <div style="display: flex;" class="c-black m-l-10">
+                            <label class="f-20">
+                              <input type="checkbox" change.delegate="selectAllCompanies(selectAll)" class="m-10"
+                                checked.bind="selectAll" />Company Names
+                            </label>
+                          </div>
+                          <div style="display: flex;" repeat.for="companyDetail of selectedCompaniesList"
+                            class="c-black m-l-10">
+                            <label>
+                              <input type="checkbox" class="m-10"
+                                checked.bind="companyDetail.isSelected" />${companyDetail.name}</label>
+                          </div>
+                          <div style="display: flex;" class="m-10" if.bind="sideHeaderIndex==1">
+                            <label style="margin-top: 10px;margin-right: 20px;">Location</label>
+                            <input type="file" id="fileGeoData" accept=".geojson" value.bind='fileVal'
+                              files.bind="selectedFiles" change.delegate="onSelectFile($event)" id="fileUploader"
+                              class="m-10">
+                            <!-- <div style="text-align: center;">
+                              <button type="button" click.delegate="saveGeoData()" disabled.bind="!selectedFiles"
+                                class="btn btn-info waves-effect waves-button waves-float bg-close c-blueviolet m-b-10"
+                                style="background-color: blueviolet;border-radius:5px 5px 5px 5px;"
+                                data-dismiss="modal">Upload</button>
+                            </div> -->
+                          </div>
+                          <div if.bind="sideHeaderIndex==0">
+                            <button data-toggle="modal"
+                              style="width:100px;background: #614296;border-radius:10px 10px 10px 10px;"
+                              class="fa-btn btn m-5 btn-primary btn-lg" href="#companiesConflict"
+                              click.delegate="mapCompanies()">
+                              Save
+                            </button>
+                            <button style="width:100px;background: #614296;border-radius:10px 10px 10px 10px;"
+                              class="fa-btn btn m-5 btn-primary btn-lg" click.delegate="sideDrawerNav()">
+                              Cancel
+                            </button>
+                          </div>
+                          <div if.bind="sideHeaderIndex==1">
+                            <button style="width:100px;background: #614296;border-radius:10px 10px 10px 10px;"
+                              class="fa-btn btn m-5 btn-primary btn-lg"
+                              click.delegate="updateSelectedLocationPolygonOrCompanies(selectedFiles)"
+                              data-toggle="modal">
+                              Save
+                            </button>
+                            <button style="width:100px;background: #614296;border-radius:10px 10px 10px 10px;"
+                              class="fa-btn btn m-5 btn-primary btn-lg" click.delegate="sideDrawerNav()">
+                              Cancel
+                            </button>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="Alertbar" class="navbar1" style="display:none;  box-shadow:0 0 0 0;">
+          <div class="navbar1">
+            <div class="side-nav">
+              <div class=" pmbb-body propertyInformation">
+                <div class="pmbb-view">
+                  <div>
+                    <div>
+                      <div style="display: flex;">
+                        <a class="m-10" click.delegate="side()">
+                          <i class="zmdi zmdi-caret-left c-black cursorPointer"></i>
+                        </a>
+                        <dt class="m-10 f-w-b f-20" class="c-black">Update Location
+                        </dt>
+                      </div>
+                    </div>
+                    <div>
+                      <div>
+                        <div style="display: flex;" class="c-black m-l-10">
+                          <h3>All Companies mapped to the location will be <br> removed, do you wish to proceed? </h3>
+                        </div>
+                        <div class="c-black m-l-10 m-t-30">
+                          <table class="table">
+                            <thead>
+                              <td class="final"> <label class="final3" style="color: black;">Locations</label> </td>
+                              <td class="final"> <label class="final3" style="color:black;">Company</label> </td>
+                            </thead>
+                            <tbody>
+                              <tr if.bind="singlelocation.length > 0" repeat.for="locationDetails of singlelocation">
+                                <td class="w-25">${locationDetails.locationName}</td>
+                                <td class="w-25" textWrap="true">${locationDetails.companyNames}</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                        <div>
+                          <button style="width:100px;background: #614296;border-radius:10px 10px 10px 10px;"
+                            class="fa-btn btn m-5 btn-primary btn-lg" click.delegate="removeCompanies()"
+                            data-toggle="modal">
+                            yes
+                          </button>
+                          <button style="width:100px;background: #614296;border-radius:10px 10px 10px 10px;"
+                            class="fa-btn btn m-5 btn-primary btn-lg" click.delegate="side()">
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal" aria-hidden="false" id="companiesConflict" style="left:0px;"
+                    if.bind="isOverlappedCompanies" role="dialog">
+                    <div style="width:1700px;padding-left: 37%">
+                      <div class="modal-content" style="width: 40%; margin-top:25%;text-align:center;">
+                        <h4 class="well well-sm" style="text-align: left;font-weight: 700; "> Error!
+                          <i class="zmdi zmdi-close" style="margin-left: 80%;cursor: pointer;" data-dismiss="modal"></i>
+                        </h4>
+                        <div class="cardModal" style="overflow-y: scroll;height: 250px;">
+                          <div repeat.for="companyDetail of mappingConflict">
+                            <label style="text-align: center;font-size:20px;color:blueviolet; margin-top: 5%;">This area
+                              is
+                              being served by</label>
+                            <label style="margin-bottom: 5%"><span
+                                style="text-align: center;font-size:20px;  color: black; text-decoration: underline;">${companyDetail.vendorName}</span>
+                              <span style="text-align: center; font-size: 20px;  color: blueviolet;">for</span>
+                              <span
+                                style="text-align: center;font-size:20px; color: black; text-decoration: underline;">${companyDetail.companyName}</span>
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+  </section>
+</template>

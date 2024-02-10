@@ -1,0 +1,39 @@
+﻿<template>
+  <header id="header" class="header-pro" if.bind="appState.userId">
+    <ul class="header-inner">
+      <li id="menu-trigger" data-trigger="#sidebar">
+        <div class="line-wrap linewrapMedia">
+          <div class="line top"></div>
+          <div class="line center"></div>
+          <div class="line bottom"></div>
+        </div>
+      </li>
+      <li class="logo logoMedia">
+        <a href="#/crm-home">Viwito</a>
+        <!--<a href="" class="tm-logo" ></a>-->
+      </li>
+      <li class="header-country headercountry-align">
+      </li>
+      <li class="pull-right" style="margin-top: -8px;">
+        <ul class="top-menu">
+          <li id="toggle-width">
+            <div class="toggle-switch">
+              <input id="tw-switch" type="checkbox" hidden="hidden">
+              <label for="tw-switch" class="ts-helper"></label>
+            </div>
+          </li>
+          <li class="dropdown logout-style">
+            <a data-toggle="dropdown" title="Logout" class="logoutIcon" click.delegate="logout()">
+              <i class="zmdi zmdi-power"></i>
+            </a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <!-- Top Search Content -->
+    <div id="top-search-wrap">
+      <input type="text">
+      <i id="top-search-close">&times;</i>
+    </div>
+  </header>
+</template>

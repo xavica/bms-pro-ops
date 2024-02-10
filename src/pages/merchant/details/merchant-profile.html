@@ -1,0 +1,229 @@
+<template>
+  <div id="shadow"></div>
+  <div class="">
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding: 7px;">
+        <div class="merchentfullcard" if.bind="!isLoading">
+          <div class="row" if.bind="showEditButton">
+            <button class="btn btn-info waves-effect1 waves-button waves-float companyaddbtn"
+              click.delegate="openProfilePopUp()" href="#edit" style="background-color: #2196f3;">
+              Edit
+            </button>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <div class="row">
+              <dl class="dl-horizontal">
+                <dt>Merchant ID</dt>
+                <dd> : ${merchantNonEdit.id}</dd>
+              </dl>
+              <dl class="dl-horizontal">
+                <dt>Business Name</dt>
+                <dd>: ${merchantNonEdit.businessName }</dd>
+              </dl>
+              <dl class="dl-horizontal">
+                <dt>Name</dt>
+                <dd>: ${merchantNonEdit.name }</dd>
+              </dl>
+              <dl class="dl-horizontal">
+                <dt>Email</dt>
+                <dd>: ${merchantNonEdit.email}</dd>
+              </dl>
+              <dl class="dl-horizontal">
+                <dt>Mobile Number</dt>
+                <dd>: ${merchantNonEdit.mobileNumber}</dd>
+              </dl>
+
+              <dl class="dl-horizontal">
+                <dt>Business Type</dt>
+                <dd>: ${merchantNonEdit.businessTypeId | merchantBusinessType}</dd>
+              </dl>
+              <dl class="dl-horizontal">
+                <dt>Vrs Site Link</dt>
+                <dd>: ${merchantNonEdit.vrsMappingInfo.apiUrl}</dd>
+              </dl>
+
+              <dl class="dl-horizontal" if.bind="merchantNonEdit.businessTypeId==4">
+                <dt>Inventory Reference</dt>
+                <dd>: ${merchantNonEdit.inventoryVendorReferenceName}</dd>
+              </dl>
+              <dl class="dl-horizontal" if.bind="isShowGoLive">
+                <dt>Live Status</dt>
+                <dd if.bind="!merchant.isActive || (merchant.isActive && !merchant.isLive)">: Not-Live</dd>
+                <dd if.bind="merchant.isActive && merchant.isLive">: Live</dd>
+              </dl>
+              <dl class="dl-horizontal" if.bind="!isShowGoLive">
+                <dt>Live Status</dt>
+                <dd if.bind="!merchant.isLive">: Not-Live</dd>
+                <dd if.bind="merchant.isLive">: Live</dd>
+              </dl>
+            </div>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <div class="row">
+              <dl class="dl-horizontal">
+                <dt>Status</dt>
+                <dd>:
+                  <label if.bind="merchantStatus" style="color:rgb(66, 183, 42);">Activate</label>
+                  <label if.bind="!merchantStatus" style="color:#f44336;">InActive</label>
+                </dd>
+              </dl>
+              <dl class="dl-horizontal">
+                <dt>PAN Card</dt>
+                <dd class="pancardinput">: ${merchantNonEdit.panNumber}</dd>
+              </dl>
+              </dl>
+              <dl class="dl-horizontal">
+                <dt>GST Number</dt>
+                <dd>: ${merchantNonEdit.gstNumber}</dd>
+              </dl>
+              <dl class="dl-horizontal">
+                <dt>Address</dt>
+                <dd>: ${merchantAddressString}</dd>
+              </dl>
+
+              <dl class="dl-horizontal">
+                <dt style="position: relative;top:60px">Profile</dt>
+                <dd>:
+                  <img if.bind="digitalOceanImageUrl"
+                    style="width:190px;height:190px;margin-top: -10px;margin-left: -10px;"
+                    src.bind="digitalOceanImageUrl" />
+
+                  <img style="width:180px;height:170px;margin-top: -10px;margin-left: -10px;"
+                    if.bind="!digitalOceanImageUrl" src="../../../../Default_pfp.png" alt="My Image">
+              </dl>
+            </div>
+          </div>
+        </div>
+        <!-- <div class="loader loaderCustomise" if.bind="isLoading"></div> -->
+        <!-- <div class="loader loaderCustomise" if.bind="popupLoader"></div> -->
+
+      </div>
+    </div>
+  </div>
+  <div class="modal" aria-hidden="false" id="addAddressPopUp" style="left:0px;" role="dialog">
+    <div>
+      <div class="modal-content" style="width: 70%;padding: 35px; margin:auto;text-align:center;margin-top: 6%;">
+        <div id="" class="scroll-container">
+          <div class="cardModal">
+
+
+            <div class="row">
+              <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+                <dl class="dl-horizontal textaligncnter" style="text-align: left;">
+                  <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                      <div if.bind="merchant.isActive" class="online">
+                      </div>
+                      <label if.bind="merchant.isActive" style="color:rgb(66, 183, 42);">Activate</label>
+                      <div if.bind="!merchant.isActive" class="online offline">
+                      </div>
+                      <label if.bind="!merchant.isActive" style="color:#f44336;">InActive</label>
+                      <input class="onlinecheckbox" type="checkbox" checked.bind="merchant.isActive"
+                        style="margin-top: 4px ! important;" />
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" if.bind="isShowGoLive">
+                      <input class="onlinecheckbox" type="checkbox" id="myCheckbox" checked.bind="merchant.isLive"
+                        style="margin-top: 4px ! important;" />
+                      <label class="isliveeditpopuplable" id="goLiveText">Go Live</label>
+                    </div>
+                </dl>
+                <dl class="dl-horizontal">
+                  <dt>GST</dt>
+                  <input type="text" class="form-control" placeholder="Enter GST Number"
+                    value.bind="merchant.gstNumber">
+                </dl>
+                <dl class="dl-horizontal">
+                  <dt>PAN</dt>
+                  <input type="text" class="form-control pancardinput" placeholder="Enter Pan Number"
+                    value.bind="merchant.panNumber">
+                </dl>
+                <h3>Address</h3>
+                <dl class="dl-horizontal">
+                  <dt>Street</dt>
+                  <input type="text" class="form-control" placeholder="Street" value.bind="merchant.address.street">
+                </dl>
+                <dl class="dl-horizontal">
+                  <dt>Area</dt>
+                  <input type="text" class="form-control" placeholder="Area" value.bind="merchant.address.area">
+                </dl>
+                <dl class="dl-horizontal">
+                  <dt>City</dt>
+                  <input type="text" class="form-control" placeholder="City" value.bind="merchant.address.city">
+                </dl>
+                <dl class="dl-horizontal">
+                  <dt style="width: 100%;">State</dt>
+                  <dt style="width: 100%;">
+                    <div class="fg-line">
+                      <select class="form-control" value.bind="merchant.address.state">
+                        <option value="">--- Select State ---</option>
+                        <option repeat.for="state of states" model.bind="state.name">${state.name} </option>
+                      </select>
+                    </div>
+                  </dt>
+                </dl>
+                <dl class="dl-horizontal">
+                  <dt>Country</dt>
+                  <input type="text" class="form-control" placeholder="Country" value.bind="merchant.address.country">
+                </dl>
+                <dl class="dl-horizontal">
+                  <dt>Pincode</dt>
+                  <input type="text" class="form-control" placeholder="Pincode" value.bind="merchant.address.pincode">
+                </dl>
+                <dl class="dl-horizontal">
+                  <dt>Latitude</dt>
+                  <input text="" class="form-control" type="number" value.bind="merchant.address.latitude " />
+                </dl>
+                <dl class="dl-horizontal">
+                  <dt>Longitude</dt>
+                  <input text="" class="form-control" type="number" value.bind="merchant.address.longitude" />
+                </dl>
+              </div>
+              <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+
+                <div class="promotionss" if.bind="digitalOceanImageUrl && !isImageSelected"
+                  style="margin: auto;margin-top: 45px;border: beige;">
+                  <img src.bind="digitalOceanImageUrl"
+                    style="width:290px;height:200px;margin-top: -10px;margin-left: -10px;" />
+                </div>
+                <div if.bind="!digitalOceanImageUrl && !isImageSelected" class="promotionss"
+                  style="margin: auto;margin-top: 45px;border: beige;">
+                  <img style="width:290px;height:200px;margin-top: -10px;margin-left: -10px;" />
+                </div>
+                <div if.bind="digitalOceanImageUrl && isImageSelected" class="promotionss"
+                  style="margin: auto;margin-top: 45px;border: beige;">
+                  <img id="preview" style="width:290px;height:200px;margin-top: -10px;margin-left: -10px;" />
+
+                </div>
+                <div if.bind="!digitalOceanImageUrl && isImageSelected" class="promotionss"
+                  style="margin: auto;margin-top: 45px;border: beige;">
+                  <img id="preview" style="width:290px;height:200px;margin-top: -10px;margin-left: -10px;" />
+                </div>
+                <div>
+                  <form class="text-center" role="form" enctype="multipart/form-data">
+                    <div class="text-center fileUpload btn btn-primary" style="margin-top: 30px;">
+                      <span>Select Image (PNG only)</span>
+                      <input class="upload" type="file" name="fileInput" files.bind="selectedImage" accept="image/png"
+                        change.delegate="displayImagePreview($event)">
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="loader loaderCustomise" if.bind="popupLoader"></div>
+
+        <div class="addressavebtns">
+          <button style="background-color:grey;border-radius:5px 5px 5px 5px;width:102px;padding: 10px;"
+            class="btn btn-info  waves-float c-blueviolet m-b-10 m-l-30" click.delegate="closeProfilePopUp()">Cancel
+          </button>
+          <button click.delegate="saveDetails()"
+            class="btn btn-info waves-effect waves-button waves-float bg-close c-blueviolet m-b-10"
+            style="border-radius:5px 5px 5px 5px;width:102px;padding: 10px;margin-left: 55px;">Update</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</template>

@@ -1,0 +1,10 @@
+<template>
+  <compose view-model="_layout/wpclassic/header-bar"></compose>
+  <header-bar></header-bar>
+  <section id="main" class="page-host">
+    <compose view-model="_layout/wpclassic/side-bar"> </compose>
+  </section>
+  <div class="page-host">
+    <router-view></router-view>
+  </div>
+</template>

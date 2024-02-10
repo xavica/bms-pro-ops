@@ -1,0 +1,155 @@
+<template>
+    <div id="shadow"></div>
+    <div class="">
+        <div class="card ">
+            <div class="card-header p-b-5 m-b-0">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12"></div>
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                        <button class="btn btn-primary" style="float: right;" type="button" data-toggle="collapse"
+                            click.delegate="downloadSampleCustomerUploadFile()">
+                            Excel Format
+                        </button>
+                        <button class="btn btn-primary" style="float: right;margin-right: 10px;" type="button"
+                            data-toggle="collapse" click.delegate="exportToExcel()">
+                            Download To Excel
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <form class="form-horizontal" role="form">
+                <div class="card-body card-padding ">
+                    <div class="row">
+                        <div class="col-sm-12 typeOne ">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="row">
+                                    <p>Upload Excel</p>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="padding: 0px;">
+                                    <div class="row">
+                                        <div class="col-lg-7 col-md-7 col-sm-12 col-xs-12" style="padding: 0px;">
+
+
+                                            <button class="file_upload" type="button">
+                                                <span class="btn_lbl">
+                                                    <i class="zmdi zmdi-upload"
+                                                        style="font-size: 18px;color: #1f96f3;"></i>
+                                                    Choose File</span>
+                                                <span class="btn_colorlayer"></span>
+                                                <input type="file" name="fileupload" files.bind="selectedfile"
+                                                    accept=".xlsx, .xls, .csv" id="file_upload" />
+                                            </button>
+
+
+                                        </div>
+                                        <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
+                                            <button class="btn btn-info waves-effect waves-button waves-float"
+                                                id="sa-title" style="margin-left: 15px;height: 32px;"
+                                                click.delegate="convertexcel()">Upload</button>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="loader" if.bind="isLoading">
+        </div>
+        <div if.bind="isLoading"><a>${noOfSavedRecords} of ${customersFromExcel} record has been
+                saved...</a></div>
+        <form class="form-horizontal" role="form" if.bind="!isLoading">
+            <div class="listTable">
+                <div class="p-l-30">
+                    <h4>${errorMessage}</h4>
+                </div>
+                <div class="card-body card-padding">
+                    <div class="table-responsive" tabindex="0">
+                        <table class="table" show.bind="customerRowsWithError.length > 0">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Business Name</th>
+                                    <th>Mobile Number</th>
+                                    <th>Email</th>
+                                    <th>Gst Number</th>
+                                    <th>Street</th>
+                                    <th>Area</th>
+                                    <th>City</th>
+                                    <th>State</th>
+                                    <th>Pincode</th>
+                                </tr>
+                            </thead>
+                            <tbody repeat.for="result of customerRowsWithError">
+                                <tr class="error-background">
+                                    <td>${result.name}</td>
+                                    <td>${result.businessName}</td>
+                                    <td>${result.mobileNumber}</td>
+                                    <td>${result.email}</td>
+                                    <td>${result.gstNumber}</td>
+                                    <td>${result.street}</td>
+                                    <td>${result.area}</td>
+                                    <td>${result.city}</td>
+                                    <td>${result.state}</td>
+                                    <td>${result.pincode}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <table class="table"
+                            show.bind="customersFromExcel.length > 0 && customerRowsWithError.length ==0">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Business Name</th>
+                                    <th>Mobile Number</th>
+                                    <th>Email</th>
+                                    <th>Gst Number</th>
+                                    <th>Street</th>
+                                    <th>Area</th>
+                                    <th>City</th>
+                                    <th>State</th>
+                                    <th>Pincode</th>
+                                </tr>
+                            </thead>
+                            <tbody repeat.for="result of customersFromExcel">
+                                <tr>
+                                    <td>${result.name}</td>
+                                    <td>${result.businessName}</td>
+                                    <td>${result.mobileNumber}</td>
+                                    <td>${result.email}</td>
+                                    <td>${result.gstNumber}</td>
+                                    <td>${result.street}</td>
+                                    <td>${result.area}</td>
+                                    <td>${result.city}</td>
+                                    <td>${result.state}</td>
+                                    <td>${result.pincode}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="backButton">
+            <a class="btn-float btn btn-fixed btn-danger btn-icon waves-effect waves-button waves-float waves-effect waves-button waves-float gcustom-btn"
+                role="button" click.delegate="showCustomerPage()">
+                <i class="zmdi zmdi-arrow-back"></i>
+            </a>
+        </div>
+        <!-- <div class=" text-center" if.bind="customersFromExcel.length > 0 && customerRowsWithError.length ==0">
+                <button class="btn btn-primary" type="button" click.delegate="saveExcelCustomersInFirebase()">
+                    Save
+                </button>
+
+                <button class="btn btn-primary" type="button" click.delegate="clearCustomer()">
+                    Cancel
+                </button>
+            </div> -->
+    </div>
+    </div>
+
+</template>

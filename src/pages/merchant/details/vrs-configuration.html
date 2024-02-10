@@ -1,0 +1,161 @@
+<template>
+    <div class="">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding: 7px;">
+                <div class="merchentfullcard">
+                    <!--------------new merchant first screen--------------->
+                    <div if.bind="!showCreateVrsConfigInfo && !showVrsConfigInfo">
+                        <div style="text-align: center;">
+                            <label style="margin-top: 5%;font-size:20px;color: black;">This merchant is not assosciated
+                                with the VRS</span>
+                            </label>
+                        </div>
+                        <div style="text-align: center;">
+                            <label style="margin-top: 5px;font-size:12px; color: gray;">To Link your merchant click on
+                                "link" button</span>
+                            </label>
+                        </div>
+                        <div style="text-align: center;height: 50%;">
+                            <button click.delegate="addErpSettings()"
+                                style="width: 30%;background-color: #ff961e;border-radius: 10px;margin-top: 20px;">
+                                <label style="color: white;">Link</label>
+                            </button>
+                        </div>
+                    </div>
+                    <!--------------new merchant second screen--------------->
+
+                    <div class="row" if.bind="!showCreateVrsConfigInfo && showVrsConfigInfo">
+                        <div style="margin-top: 5%;">
+                            <dl class="dl-horizontal" style="margin-left: 22%;">
+                                <dt>Vrs Site Url<i class="fa fa-asterisk" aria-hidden="true"
+                                        style="color: rgb(219 52 93);margin-top: -2px;position: absolute; margin-left: 3px;font-size: 9px"></i>
+                                </dt>
+                                <dd> <input type="text" class="form-control" placeholder="VRS Site Url"
+                                        value.bind="vrsMappingInfo.apiUrl" style="width: 400px;">
+                                </dd>
+                            </dl>
+                            <dl class="dl-horizontal" style="margin-left: 22%;">
+                                <dt>Api Key<i class="fa fa-asterisk" aria-hidden="true"
+                                        style="color: rgb(219 52 93);margin-top: -2px;position: absolute; margin-left: 3px;font-size: 9px"></i>
+                                </dt>
+                                <dd><input type="text" class="form-control" placeholder="Api Key"
+                                        value.bind="vrsMappingInfo.apiKey" style="width: 400px;"></dd>
+                            </dl>
+                            <dl class="dl-horizontal" style="margin-left: 22%;">
+                                <dt>API Secret Key<i class="fa fa-asterisk" aria-hidden="true"
+                                        style="color: rgb(219 52 93);margin-top: -2px;position: absolute; margin-left: 3px;font-size: 9px"></i>
+                                </dt>
+                                <dd><input type="text" class="form-control" placeholder="Api Secret Key"
+                                        value.bind="vrsMappingInfo.apiSecret" style="width: 400px;"></dd>
+                            </dl>
+                            <div style="text-align:center;">
+                                <button style="padding: 15px 20px;font-weight:700;margin-top: 50px;"
+                                    click.delegate="saveVrsMappingInfo()"
+                                    class="btn btn-primary waves-effect waves-button waves-float text-center"
+                                    type="button" data-toggle="collapse" data-target="#collapseExample"
+                                    aria-expanded="false" aria-controls="collapseExample" data-dismiss="modal">
+                                    SAVE
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!---------------linked merchant-------------->
+                    <div if.bind="showCreateVrsConfigInfo" style="margin-left: 22%;margin-top: 5%;">
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <div class="row">
+                                <dl class="dl-horizontal">
+                                    <dt>Vrs Site Url</dt>
+                                    <dd>: ${merchantNonEdit.apiUrl}</dd>
+                                </dl>
+                                <dl class="dl-horizontal">
+                                    <dt>Api Key</dt>
+                                    <dd>: ${merchantNonEdit.apiKey}</dd>
+                                </dl>
+                                <dl class="dl-horizontal">
+                                    <dt>API Secret Key</dt>
+                                    <dd>: ${merchantNonEdit.apiSecret}</dd>
+                                </dl>
+                                <dl class="dl-horizontal">
+                                    <dt>Self Sales Person Id</dt>
+                                    <dd>: ${merchantNonEdit.selfSalesPersonId}</dd>
+                                </dl>
+                                <dl class="dl-horizontal" if.bind="isJitVendor">
+                                    <dt>Tag Vendor</dt>
+                                    <dd>
+                                        <select class="selectDrp" value.bind="selectedInventoryVendor"
+                                            style="width: 100%;">
+                                            <option value=0>Select Vendor</option>
+                                            <option repeat.for="vendor of inventoryVendorReference" model.bind="vendor">
+                                                ${vendor.name}
+                                            </option>
+                                        </select>
+                                    </dd>
+                                </dl>
+                                <dl class="dl-horizontal" if.bind="isJitVendor">
+                                    <dt>.</dt>
+                                    <dd>
+                                        <button class="btn btn-info waves-effect1 waves-button waves-float "
+                                            style="background-color: #151540;"
+                                            click.delegate="tagInventoryVendorInJit()">
+                                            Tag Inventory Vendor
+                                        </button>
+                                    </dd>
+                                </dl>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <button class="btn btn-info waves-effect1 waves-button waves-float companyaddbtn"
+                                href="#edit" style="margin-top: -60px;background-color: #2196f3;" data-toggle="modal">
+                                Edit
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!---------------edit linked merchant details-------------->
+
+    <div class="modal" aria-hidden="false" id="edit" style="left:0px;" role="dialog">
+        <div style="width:1500px;padding-left: 37%;">
+            <div class="modal-content" style="width: 100%;padding: 35px; margin-top:10%;text-align:center;">
+                <div class="cardModal addressmodel">
+                    <div class="row">
+                        <dl class="dl-horizontal" style="margin-top: 5%;">
+                            <dt>Vrs Site Url<i class="fa fa-asterisk" aria-hidden="true"
+                                    style="color: rgb(219 52 93);margin-top: -2px;position: absolute; margin-left: 3px;font-size: 9px"></i>
+                            </dt>
+                            <dd> <input type="text" class="form-control" placeholder="VRS Site Url"
+                                    style="width: 400px;" value.bind="vrsMappingInfo.apiUrl">
+                            </dd>
+                        </dl>
+                        <dl class="dl-horizontal">
+                            <dt>Api Key<i class="fa fa-asterisk" aria-hidden="true"
+                                    style="color: rgb(219 52 93);margin-top: -2px;position: absolute; margin-left: 3px;font-size: 9px"></i>
+                            </dt>
+                            <dd><input type="text" class="form-control" placeholder="Api Key" style="width: 400px;"
+                                    value.bind="vrsMappingInfo.apiKey"></dd>
+                        </dl>
+                        <dl class="dl-horizontal">
+                            <dt>API Secret Key<i class="fa fa-asterisk" aria-hidden="true"
+                                    style="color: rgb(219 52 93);margin-top: -2px;position: absolute; margin-left: 3px;font-size: 9px"></i>
+                            </dt>
+                            <dd><input type="text" class="form-control" placeholder="Api Secret Key"
+                                    style="width: 400px;" value.bind="vrsMappingInfo.apiSecret"></dd>
+                        </dl>
+                        <div style="text-align:center;">
+                            <button style="padding: 15px 20px;font-weight:700;margin-top: 50px;"
+                                click.delegate="saveVrsMappingInfo()"
+                                class="btn btn-primary waves-effect waves-button waves-float text-center" type="button"
+                                data-toggle="collapse" data-target="#collapseExample" aria-expanded="false"
+                                aria-controls="collapseExample" data-dismiss="modal">
+                                Save Changes
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

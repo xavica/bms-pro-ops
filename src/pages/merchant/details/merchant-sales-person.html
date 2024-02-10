@@ -1,0 +1,250 @@
+<template>
+  <div>
+    <div id="shadow3"></div>
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding: 7px;">
+        <div class="merchentfullcard">
+          <div class="loader loadercustomisecompany1" if.bind="isLoading"></div>
+          <button if.bind="showAddButton" class="btn btn-primary companyaddbtn" type="button"
+            click.delegate="openSalePersonSearchPopUp()">
+            Add
+          </button>
+          <div>
+            <div class="card-header companeylisthdr p-b-5 m-b-0">
+              <h2 class="c-teal f-500" style="display:inline;">
+                <i class="zmdi zmdi-view-list zmidicon"></i>
+                SalesPersons List
+              </h2>
+            </div>
+            <form class="form-horizontal" role="form">
+              <div>
+                <div class="card-body card-padding cardpadingremove">
+                  <div class="table-responsive" tabindex="0" style="overflow: hidden; outline: none;">
+                    <table class="table">
+                      <thead>
+                        <th style="padding: 10px;">Name</th>
+                        <th style="padding: 10px;">Mobile Number</th>
+                        <th style="padding: 10px;">Distributors</th>
+                        <th style="padding: 10px;">Action</th>
+                      </thead>
+                      <tbody style="font-size:13px;">
+                        <tr if.bind="merchantSalesPersons.length==0">
+                          <td>No Sales Person Added</td>
+                        </tr>
+                        <tr repeat.for="salesPerson of merchantSalesPersons">
+                          <td style="padding: 10px;">${salesPerson.name}</td>
+                          <td style="padding: 10px;">${salesPerson.mobilenumber}</td>
+                          <td style="padding: 10px;">
+                            <a click.delegate="showSalesPersonDetails(salesPerson)">Distributor ${salesPerson.count}</a>
+                          </td>
+                          <td style="padding: 10px;">
+                            <button click.delegate="deleteSalesPerson(salesPerson)"
+                              class="btn btn-info waves-effect waves-button waves-float salesPersonaddbtn"
+                              style="margin: 0px;" data-dismiss="modal" id="sa-update">Delete</button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal" aria-hidden="false" id="addSalesPersonPopUp" style="left:0px;" role="dialog">
+    <div class="addcompenydiv" style="margin-left: 20% ! important;">
+      <div>
+        <div class="modal-content" style="width: 80%;padding: 35px 35px 70px 35px;margin-top: 10%;text-align: center;">
+          <div class="cardModal">
+            <label style="text-align: center;font-size:16px;margin-bottom: 25px;margin-top: 25px;">Assign Sales
+              Executive</label>
+            <i class="zmdi zmdi-close closiconsmarchent" click.delegate="closeSalePersonSearchPopUp()"
+              style="position: absolute;right:25px;top:10px"></i>
+          </div>
+          <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+              <input class="merchentsearchinput salespersoninput inputtypenumarrowhide" style="width:82%" maxlength="10"
+                type="number" class="form-control" placeholder="Enter Mobile Number" value.bind="salesPersonMobileNum"
+                oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                type="number" onkeydown="return event.keyCode !== 69">
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+              <button click.delegate="getSalesPersonByMobileNumber(salesPersonMobileNum)"
+                class="btn btn-info waves-effect waves-button waves-float salessrcbtn" id="sa-update"
+                style="float: left;margin-right: 75px;background-color: #2196f3;border-radius: 5px;">Search</button>
+            </div>
+            <p if.bind="isCustomer">No Sales Executive found </p>
+          </div>
+          <div if.bind="salesPersonSearchResultFound" class="row" style="margin:5px 0px;padding: 0px 20px">
+            <label class="salespersonText" if.bind="salesPerson.userTypeId != 7">this Customer Not a Sales
+              Person</label>
+            <label class="salespersonText" if.bind="salesPerson.userTypeId == 7 && salesPerson.salesAidInfo">Customer
+              already tagged </label>
+            <table class="table" style="text-align: left;">
+              <thead>
+                <th style="padding: 10px;">Name</th>
+                <th style="padding: 10px;">Mobile Number</th>
+                <th style="padding: 10px;">Add Sales Person</th>
+              </thead>
+              <tbody style="font-size:13px;">
+                <tr>
+                  <td style="padding:16px 10px;">${salesPerson.name}</td>
+                  <td style="padding:16px 10px;">${salesPerson.mobileNumber}</td>
+
+                  <td style="padding: 10px;">
+                    <button disabled.bind="!salesPerson.enableAddButton" click.delegate="addSalesPerson(salesPerson)"
+                      class="btn btn-info waves-effect waves-button waves-float salesPersonaddbtn" style="margin: 0px;"
+                      data-dismiss="modal" id="sa-update">Add</button>
+                  </td>
+                </tr>
+              </tbody>
+              <div class="loader loadercustomisecompany1" if.bind="isLoading"></div>
+            </table>
+          </div>
+          <div if.bind="showCreateSalesPersonView" class="row" style="margin:5px 0px;padding: 0px 20px">
+            <label class="salespersonText">0 Record Found</label>
+            <table class="table" style="text-align: left;">
+              <thead>
+                <th style="padding: 10px;">Name</th>
+                <th style="padding: 10px;">Mobile Number</th>
+                <th style="padding: 10px;">Create Sales Person</th>
+              </thead>
+              <tbody style="font-size:13px;">
+                <tr>
+                  <td>
+                    <input class="" class="form-control" placeholder="Enter Name" value.bind="createSalePersonName">
+                  </td>
+                  <td style="padding:16px 10px;">${salesPersonMobileNum}</td>
+                  <td style="padding: 10px;">
+                    <button click.delegate="createSalesPerson(createSalePersonName,salesPersonMobileNum)"
+                      class="btn btn-info waves-effect waves-button waves-float salesPersonaddbtn" style="margin: 0px;"
+                      data-dismiss="modal" id="sa-update">Create</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal" aria-hidden="false" id="showSalesPersonPopUp" style="left:0px;" role="dialog">
+    <div class="addcompenydiv" style="margin-left: 20% ! important;">
+      <div>
+        <div class="modal-content" style="width: 80%;padding: 35px 35px 70px 35px;margin-top: 10%;text-align: left;">
+          <div class="cardModal">
+            <i class="zmdi zmdi-close closiconsmarchent" click.delegate="closeSalesPersonDetails()"
+              style="position: absolute;right:25px;top:10px"></i>
+          </div>
+          <div class="row" style="margin:5px 0px;">
+            <div class="row">
+              <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <label style="margin-top: 20px;color: #151540;">selectedSalesPerson</label>
+              </div>
+              <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <button if.bind="merchant.businessTypeId == 2" class="btn salesPersonaddbtn distributorbtn"
+                  click.delegate="getDistributors()" style="float: right;" id="sa-update">Add</button>
+              </div>
+            </div>
+            <table class="table" style="text-align: left;">
+              <thead>
+                <th style="padding: 10px;">Name</th>
+                <th style="padding: 10px;">Vrs Id</th>
+                <th if.bind="merchant.businessTypeId == 2" style="padding: 10px;">Action</th>
+              </thead>
+              <tbody style="font-size:13px;">
+                <tr repeat.for="distributor of selectedSalesPerson.distributors">
+                  <td style="padding:16px 10px;">${distributor.name}</td>
+                  <td style="padding:16px 10px;">${distributor.vrsId}</td>
+                  <td style="padding:16px 10px;" if.bind="merchant.businessTypeId == 2">
+                    <button class="btn edtbtn1"
+                      click.delegate="deleteDistributorFromManufactureSalesPerson(selectedSalesPerson.id,distributor.id)">
+                      <i class="zmdi zmdi-delete" style="color: black;text-align: center;"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal" aria-hidden="false" id="searchDistributorPopUp" style="left:0px;" role="dialog">
+    <div class="addcompenydiv" style="margin-left: 16% ! important;">
+      <div>
+        <div class="modal-content" style="width: 90%;padding: 35px; margin-top:10%;text-align:center;">
+          <div class="cardModal addressmodel">
+            <div class="row">
+              <i class="zmdi zmdi-close closiconsmarchent" click.delegate="closeDistributorSearchPopUp()"></i>
+            </div>
+            <div class="row" style="margin: 0px;">
+              <div class="col-lg-5 col-md-6 col-sm-6 col-xs-6">
+                <input class="searchDistributor salespersoninput" value.bind="distributorName" maxlength="10"
+                  class="form-control" placeholder="search..." type="text">
+              </div>
+              <div class="col-lg-7 col-md-7 col-sm-6 col-xs-6">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding-right: 0px;">
+                  <button click.delegate="searchDistributor(distributorName)"
+                    class="btn btn-info waves-effect waves-button waves-float salessrcbtn merchntsrcbtns"
+                    id="sa-update">Search</button>
+                  <button click.delegate="viewSelectedDistributor()"
+                    class="btn btn-info waves-effect waves-button waves-float salessrcbtn" id="sa-update"
+                    style="float: left;margin-left: 10px;border-radius: 5px;">View
+                    Selected</button>
+                  <button style="margin-left: 10px;" click.delegate="clearSearch()"
+                    class="btn btn-info waves-effect waves-button waves-float salessrcbtn merchntsrcbtns"
+                    id="sa-update">Clear
+                    Filter</button>
+                </div>
+              </div>
+            </div>
+            <div class="row" style="margin:25px 0px;">
+              <label if.bind="viewDistributorList.length==0">No Distributor to Add</label>
+              <div>
+                <a style="text-align: left;" repeat.for="distributor of viewDistributorList | paginate:currentPage">
+                  <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12" class="compenyesdiv"
+                    style="padding-bottom: 25px !important;">
+                    <input type="checkbox" class="m-r-10 m-l-10" checked.bind="distributor.isSelected" />
+                    <label class="compenyeslable">${distributor.name}</label>
+                  </div>
+                </a>
+              </div>
+            </div>
+            <div class="row">
+              <div class="addressavebtns">
+                <button if.bind="viewDistributorList.length!=0" click.delegate="saveMerchantDistributor()"
+                  class="btn btn-info waves-effect waves-button  m-b-10"
+                  style="background-color: #2196f3;border-radius:5px 5px 5px 5px;padding: 10px;"
+                  data-dismiss="modal">Save
+                  Changes</button>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <ul class="pagination">
+                  <li click.trigger="setPreviousPage()"><a href="" title="Previous Page"><i
+                        class="zmdi zmdi-fast-rewind"></i></a>
+                  </li>
+                  <li click.trigger="setFirstPage()"><a class="a-prevent" href="">${currentPage}</a></li>
+                  <li click.trigger="setNextPage()"><a href="" title="Next Page"><i
+                        class="zmdi zmdi-fast-forward"></i></a>
+                  </li>
+                </ul>
+              </div>
+              <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <div class="infos infos1">
+                  <label style="color:red">Total ${distributorCount} Distributor,</label>
+                  <label style="color:red;">and ${totalPages} Pages</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

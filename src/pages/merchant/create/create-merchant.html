@@ -1,0 +1,191 @@
+<template>
+  <section id="content">
+    <div class="container">
+      <div class="row" style="background-color: white;border-radius:  0 0 7px 7px">
+        <div class="col-sm-12 typeOne">
+          <h3><i class="zmdi zmdi-account"></i> Create Merchant</h3>
+          <div class="pmbb-body p-l-30 Data">
+            <div class="pmbb-edit">
+              <div class="col-sm-6 ">
+                <dl class="dl-horizontal">
+                  <dt class="p-t-10 mt-8 ">Business Name<i class="fa fa-asterisk" aria-hidden="true"
+                      style="color: rgb(219 52 93);margin-top: -2px;position: absolute; margin-left: 3px;font-size: 9px"></i>
+                  </dt>
+                  <dd>
+                    <div class="form-group">
+                      <input type="text" style=" font-size: 14px;" class="fg-line form-control pl-10 mt-8"
+                        value.bind="merchant.businessName" placeholder="Business Name">
+                    </div>
+                  </dd>
+
+                  <dt class="p-t-10 mt-8 ">Name<i class="fa fa-asterisk" aria-hidden="true"
+                      style="color: rgb(219 52 93);margin-top: -2px;position: absolute; margin-left: 3px;font-size: 9px"></i>
+                  </dt>
+                  <dd>
+                    <div class="form-group">
+                      <input type="text" style=" font-size: 14px;" class="fg-line form-control pl-10 mt-8"
+                        value.bind="merchant.name" placeholder="Name">
+                    </div>
+                  </dd>
+                </dl>
+                <dl class="dl-horizontal">
+                  <dt class="p-t-10 mt-8">Email<i class="fa fa-asterisk" aria-hidden="true"
+                      style="color: rgb(219 52 93);margin-top: -2px;position: absolute; margin-left: 3px;font-size: 9px"></i>
+                  </dt>
+                  <dd>
+                    <div class="form-group">
+                      <input type="email" autocomplete="new-email" style=" font-size: 14px"
+                        class="form-control fg-line pl-10 mt-8" value.bind="merchant.email" placeholder="Email">
+                  </dd>
+                </dl>
+                <dl class="dl-horizontal">
+                  <dt class="p-t-10 mt-8">Mobile Number<i class="fa fa-asterisk" aria-hidden="true"
+                      style="color: rgb(219 52 93);margin-top: -2px;position: absolute; margin-left: 3px;font-size: 9px"></i>
+                  </dt>
+                  <dd>
+                    <div class="form-group">
+                      <input type="number" maxlength="10" class="form-control fg-line pl-10 mt-8"
+                        placeholder="Mobile Number" value.bind="merchant.mobileNumber"
+                        oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+                    </div>
+                  </dd>
+                </dl>
+                <dl class="dl-horizontal">
+                  <dt class="p-t-5 m-t-10">GST Number</dt>
+                  <dd>
+                    <div class="form-group">
+                      <input type="text" class="form-control fg-line pl-10 mt-8" placeholder="GST Number"
+                        value.bind="merchant.gstNumber">
+                    </div>
+                  </dd>
+                </dl>
+                <dl class="dl-horizontal">
+                  <dt class="p-t-5 m-t-10 ">PAN Card Number</dt>
+                  <dd>
+                    <div class="form-group">
+                      <input type="text" class="form-control fg-line pl-10 mt-8" placeholder="PAN Number"
+                        value.bind="merchant.panNumber">
+                    </div>
+                  </dd>
+                </dl>
+                <dl class="dl-horizontal">
+                  <dt class="p-t-5 m-t-10">Business Type<i class="fa fa-asterisk" aria-hidden="true"
+                      style="color: rgb(219 52 93);margin-top: -2px;position: absolute; margin-left: 3px;font-size: 9px"></i>
+                  </dt>
+                  <dd>
+                    <div class="form-group">
+                      <select class="form-control fg-line pl-10 mt-8" value.bind="merchant.businessTypeId">
+                        <option value="">--Select Business Type--</option>
+                        <option repeat.for="typeId of merchantBusinessTypes" model.bind="typeId">${typeId |
+                          merchantBusinessType} </option>
+                      </select>
+                    </div>
+                  </dd>
+                </dl>
+                <dl class="dl-horizontal">
+                  <dt class="p-t-5 m-t-10">Password <i class="fa fa-asterisk" aria-hidden="true"
+                      style="color: rgb(219 52 93);margin-top: -2px;position: absolute; margin-left: 3px;font-size: 9px"></i>
+                  </dt>
+                  <dd>
+                    <div class="form-group">
+                      <input type="text" class="form-control fg-line pl-10 mt-8" placeholder="password"
+                        value.bind="merchant.password">
+                    </div>
+                  </dd>
+                </dl>
+              </div>
+              <div class="col-sm-6">
+                <dl class="dl-horizontal">
+                  <dt class="p-t-5 m-t-10">Area<i class="fa fa-asterisk" aria-hidden="true"
+                      style="color: rgb(219 52 93);margin-top: -2px;position: absolute; margin-left: 3px;font-size: 9px"></i>
+                  </dt>
+                  <dd>
+                    <div class="form-group">
+                      <input type="text" class="form-control fg-line pl-10 mt-8" placeholder="Area"
+                        value.bind="merchant.address.area">
+                    </div>
+                  </dd>
+                </dl>
+                <dl class="dl-horizontal">
+                  <dt class="p-t-5 m-t-10">D-No / Street <i class="fa fa-asterisk" aria-hidden="true"
+                      style="color: rgb(219 52 93);margin-top: -2px;position: absolute; margin-left: 3px;font-size: 9px"></i>
+                  </dt>
+                  <dd>
+                    <div class="form-group">
+                      <input type="text" class="form-control fg-line pl-10 mt-8" placeholder="D-No/Street"
+                        value.bind="merchant.address.street">
+                    </div>
+                  </dd>
+                </dl>
+                <dl class="dl-horizontal">
+                  <dt class="p-t-5 m-t-10">City <i class="fa fa-asterisk" aria-hidden="true"
+                      style="color: rgb(219 52 93);margin-top: -2px;position: absolute; margin-left: 3px;font-size: 9px"></i>
+                  </dt>
+                  <dd>
+                    <div class="form-group">
+                      <input type="text" class="form-control fg-line pl-10 mt-8" placeholder="City"
+                        value.bind="merchant.address.city">
+                    </div>
+                  </dd>
+                </dl>
+                <dl class="dl-horizontal">
+                  <dt class="p-t-5 m-t-10">State<i class="fa fa-asterisk" aria-hidden="true"
+                      style="color: rgb(219 52 93);margin-top: -2px;position: absolute; margin-left: 3px;font-size: 9px"></i>
+                  </dt>
+                  <dd>
+                    <div class="form-group">
+                      <select class="form-control fg-line pl-10 mt-8" value.bind="merchant.address.state">
+                        <option value="">--Select State--</option>
+                        <option repeat.for="state of states" model.bind="state.name">${state.name} </option>
+                      </select>
+                    </div>
+                  </dd>
+                </dl>
+                <dl class="dl-horizontal">
+                  <dt class="p-t-5 m-t-10">Pincode <i class="fa fa-asterisk" aria-hidden="true"
+                      style="color: rgb(219 52 93);margin-top: -2px;position: absolute; margin-left: 3px;font-size: 9px"></i>
+                  </dt>
+                  <dd>
+                    <div class="form-group">
+                      <input type="text" class="form-control fg-line pl-10 mt-8" placeholder="Pincode" maxlength="6"
+                        value.bind="merchant.address.pincode">
+                    </div>
+                  </dd>
+                </dl>
+                <dl class="dl-horizontal">
+                  <dt class="p-t-5 m-t-10">Latitude </dt>
+                  <dd>
+                    <div class="form-group">
+                      <input type="text" class="form-control fg-line pl-10 mt-8" placeholder="Latitude"
+                        value.bind="merchant.address.latitude">
+                    </div>
+                  </dd>
+                </dl>
+                <dl class="dl-horizontal">
+                  <dt class="p-t-5 m-t-10">Longitude </dt>
+                  <dd>
+                    <div class="form-group">
+                      <input type="text" class="form-control fg-line pl-10 mt-8" placeholder="Longitude"
+                        value.bind="merchant.address.longitude">
+                    </div>
+                  </dd>
+                </dl>
+
+
+
+              </div>
+              <div class="loader" if.bind="isLoading"></div>
+              <div class=" text-center" style=" padding-right: 50px;">
+                <button class="btn btn-primary" type="submit" data-toggle="collapse" data-target="#collapseExample"
+                  aria-expanded="false" aria-controls="collapseExample" style="width: 100px; border-radius: 5px;"
+                  click.delegate="createUser()">
+                  SUBMIT
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</template>

@@ -1,0 +1,25 @@
+﻿<template>
+  <aside id="sidebar" if.bind="appState.userId">
+    <div class="sidebar-inner">
+      <div class="si-inner">
+        <div class="profile-menu">
+          <a style="margin-top: 30px;">
+          </a>
+        </div>
+        <div class="sp-info">
+          ${appState.crm.name}
+        </div>
+        <ul class="main-menu">
+          <li repeat.for="row of router.navigation">
+            <a if.bind="!row.settings.disable" href.bind="row.href" show.bind=" !row.settings.role || (row.settings.role.indexOf($parent.appState.crm.roleTypeId) > -1)">
+              <i class="${row.settings.css}"></i> ${row.title}
+            </a>
+            <a if.bind="row.settings.disable" show.bind="!row.settings.role || (row.settings.role.indexOf($parent.appState.crm.roleTypeId) > -1)">
+              <i class="${row.settings.css}"></i> ${row.title}
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+</template>

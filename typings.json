@@ -1,0 +1,7 @@
+{
+  "name": "aurelia-skeleton-navigation-typescript-webpack",
+  "version": false,
+  "globalDependencies": {
+    "validatejs": "file:custom_typings/validatejs.d.ts"
+  }
+}

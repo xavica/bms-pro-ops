@@ -1,0 +1,74 @@
+<template>
+  <section id="content">
+    <div class="container">
+      <div class="card ">
+        <div class="listTable">
+          <div class="card-body card-padding" style="position: relative;">
+            <ul class="tab-nav tn-justified tn-icon tabsmerchentul" role="tablist">
+              <li role="presentation" class="active">
+                <a class="col-sx-3" href="#tab-1" aria-controls="tab-1" role="tab" data-toggle="tab">
+                  Profile Information
+                </a>
+              </li>
+              <li role="presentation">
+                <a class="col-sx-3" href="#tab-2" aria-controls="tab-2" role="tab" data-toggle="tab">
+                  Company
+                </a>
+              </li>
+              <li role="presentation">
+                <a class="col-sx-3" href="#tab-3" aria-controls="tab-3" role="tab" data-toggle="tab">
+                  Sales Person
+                </a>
+              </li>
+              <li role="presentation" if.bind="roleTypeId == 5  && merchant.businessTypeId != 2">
+                <a class="col-sx-3" href="#tab-4" aria-controls="tab-4" role="tab" data-toggle="tab">
+                  Vrs Configuration
+                </a>
+              </li>
+              <li role="presentation">
+                <a class="col-sx-3" href="#tab-6" aria-controls="tab-6" role="tab" data-toggle="tab">
+                  Customers Upload
+                </a>
+              </li>
+              <li role="presentation" if.bind="!merchant.isLive && !envCheck || isTestEnv">
+                <a class="col-sx-3" href="#tab-5" aria-controls="tab-4" role="tab" data-toggle="tab">
+                  Testing Module
+                </a>
+              </li>
+            </ul>
+            <div class="tab-content tabcontentinmerchent">
+              <div class="loader" if.bind="isLoading">
+              </div>
+
+              <div role="tabpanel" class="tab-pane animated fadeIn in active listTable" id="tab-1">
+                <compose view-model="./merchant-profile" model.bind="merchant"></compose>
+              </div>
+              <div role="tabpanel" class="tab-pane animated fadeIn" id="tab-2">
+                <compose view-model="./merchant-company" model.bind="merchant"></compose>
+              </div>
+              <div role="tabpanel" class="tab-pane animated fadeIn" id="tab-3">
+                <compose view-model="./merchant-sales-person" model.bind="merchant"></compose>
+              </div>
+              <div role="tabpanel" class="tab-pane animated fadeIn" id="tab-4">
+                <compose view-model="./vrs-configuration" model.bind="merchant"></compose>
+              </div>
+              <div role="tabpanel" class="tab-pane animated fadeIn" id="tab-6">
+                <compose view-model="./customer-upload" model.bind="merchant"></compose>
+              </div>
+              <div role="tabpanel" class="tab-pane animated fadeIn" id="tab-5">
+                <compose view-model="./testing-module" model.bind="merchant"></compose>
+              </div>
+            </div>
+            <div class="backButton">
+              <a class="btn-float btn btn-fixed btn-danger btn-icon waves-effect waves-button waves-float waves-effect waves-button waves-float gcustom-btn"
+                role="button" click.delegate="backButton()">
+                <i class="zmdi zmdi-arrow-back"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </section>
+</template>

@@ -1,0 +1,80 @@
+<template>
+    <div id="shadow"></div>
+    <div class="">
+        <div class="row mt-50">
+            <div class="loader loaderCustomise" if.bind="isLoader"></div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding: 7px;">
+                <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                    <div class="row ">
+                        <div style="margin-left: 10px;">
+                            <h2 class="c-black" style="display:inline;font-size: 16px;">
+                                Req Order Count<input class="searchcompany2 salespersoninput1" maxlength="2"
+                                    class="form-control" placeholder=" " type="text" value.bind="noOfOrdersRequired">
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                    <div class="row">
+                        <div style="margin-left: 10px;">
+                            <h2 class="c-black" style="display:inline;font-size: 16px;">
+                                Item Range
+                                <input class="searchcompany2 salespersoninput1" maxlength="2" class="form-control"
+                                    placeholder=" " type="text" value.bind="productsMin">
+                                <input class="searchcompany2 salespersoninput1" maxlength="2" class="form-control"
+                                    placeholder=" " type="text" value.bind="productsMax">
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    <div class="row">
+                        <div style="margin-left: 10px;">
+                            <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
+                                <h2 class="c-black" style="display:inline;font-size: 16px;">Delivery Date</h2>
+                            </div>
+                            <div class="col-lg-7 col-md-7 col-sm-12 col-xs-12">
+                                <input type="date" class="form-control" value.bind="deliveryDate"
+                                    placeholder="Delivery Date">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-50">
+            <button class="btn btn-info waves-effect1 waves-button waves-float salessrcbtn" id="sa-update"
+                style="margin-top: -5px;background-color: #2196f3;" click.delegate="generateOrders()">Generate
+                Orders</button>
+        </div>
+        <div class="row mt-50">
+            <div class="card-body card-padding cardpadingremove">
+                <div class="table-responsive" tabindex="0" style="overflow: hidden; outline: none;">
+                    <table class="table">
+                        <thead>
+                            <th style="padding: 10px;">Customer Name</th>
+                            <th style="padding: 10px;">Customer Id</th>
+                            <th style="padding: 10px;">Order Id</th>
+                            <th style="padding: 10px;">Item Count</th>
+                            <th style="padding: 10px;">Order Placed</th>
+                        </thead>
+                        <tbody style="font-size:13px;">
+                            <tr if.bind="orderList.length==0">
+                                <td>No Order Placed</td>
+                            </tr>
+                            <tr repeat.for="order of orderList">
+                                <td style="padding: 10px;">${order.customerName}</td>
+                                <td style="padding: 10px;">${order.customerId}</td>
+                                <td style="padding: 10px;">${order.orderId}</td>
+                                <td style="padding: 10px;">${order.cart.length}</td>
+                                <td style="padding: 10px;">${order.isOrderPlaced}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</template>

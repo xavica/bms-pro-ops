@@ -1,0 +1,134 @@
+<template>
+  <div id="shadow2"></div>
+  <div class="">
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding: 7px;">
+        <div class="merchentfullcard">
+          <div class="loader loadercustomisecompany" if.bind="isLoading"></div>
+          <button if.bind="isSyncBtnVisible && merchantCompaniesList.length > 0"
+            click.delegate="syncMerchantCompanies()" class="btn btn-primary companyaddbtn" type="button">
+            Sync
+          </button>
+          <button if.bind="showAddButton" class="btn btn-primary companyaddbtn" type="button"
+            click.delegate="opeCompanyPopUp()">
+            Add
+          </button>
+          <div class="card-header companeylisthdr p-b-5 m-b-0">
+            <h2 class="c-teal f-500" style="display:inline;">
+              <i class="zmdi zmdi-view-list zmidicon"></i>
+              Company List
+            </h2>
+          </div>
+          <form class="form-horizontal" role="form">
+            <div class="listTable">
+              <div class="card-body card-padding cardpadingremove">
+                <div class="table-responsive" tabindex="0" style="overflow: hidden; outline: none;">
+                  <table class="table">
+                    <thead>
+                      <th>ID</th>
+                      <th>Name</th>
+                      <th>Action</th>
+                    </thead>
+                    <tbody style="font-size:13px;">
+                      <tr if.bind="merchantCompaniesList.length==0">
+                        <td>No Company Added</td>
+                      </tr>
+                      <tr style="cursor:pointer" repeat.for="company of merchantCompaniesList">
+                        <td>${company.id}</td>
+                        <td>${company.name}</td>
+                        <td>
+                          <button click.delegate="deleteCompany(company.id)"
+                            class="btn btn-info waves-effect waves-button waves-float"
+                            style="margin-top: -5px;border-radius: 5px; ">Delete</button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="modal" aria-hidden="false" id="addCompanyPopup" style="left:0px;" role="dialog">
+    <div class="addcompenydiv">
+      <div class="loader loadercustomisecompany" if.bind="isLoading"></div>
+      <div class="modal-content" style="width: 90%;padding: 35px; margin-top:10%;text-align:center;">
+        <div class="cardModal addressmodel">
+          <div class="row">
+            <i class="zmdi zmdi-close closiconsmarchent" click.delegate="closeCompanyPopUp()"></i>
+          </div>
+          <div class="row" style="margin: 0px;">
+            <div class="col-lg-5 col-md-6 col-sm-6 col-xs-6">
+              <div style="height: 40px;">
+                <input class="searchcompany1 salespersoninput" value.bind="companySearchName" class="form-control"
+                  placeholder="Enter Company" type="text">
+              </div>
+            </div>
+            <div class="col-lg-7 col-md-7 col-sm-6 col-xs-6">
+              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding-right: 0px;">
+                <button click.delegate="searchCompany(companySearchName)"
+                  class="btn btn-info waves-effect waves-button waves-float salessrcbtn merchntsrcbtns"
+                  id="sa-update">Search</button>
+                <button click.delegate="viewSelectedCompanies()"
+                  class="btn btn-info waves-effect waves-button waves-float salessrcbtn" id="sa-update"
+                  style="float: left;margin-left: 10px;border-radius: 5px;">View
+                  Selected</button>
+
+                <button style="margin-left: 10px;" click.delegate="clearSearch()"
+                  class="btn btn-info waves-effect waves-button waves-float salessrcbtn merchntsrcbtns"
+                  id="sa-update">RESET</button>
+              </div>
+            </div>
+          </div>
+          <div class="row" style="margin:25px 0px;">
+            <div>
+              <a style="text-align: left;" repeat.for="company of viewCompaniesList | paginate:currentPage">
+                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12" class="compenyesdiv"
+                  style="padding-bottom: 25px !important;">
+                  <input type="checkbox" class="m-r-10 m-l-10" checked.bind="company.isSelected" />
+                  <label class="compenyeslable">${company.name}</label>
+                </div>
+              </a>
+            </div>
+          </div>
+          <div class="row">
+            <div class="addressavebtns" if.bind="viewCompaniesList.length > 0">
+              <button click.delegate="saveMerchantCompanies()" class="btn btn-info waves-effect waves-button  m-b-10"
+                style="background-color: #2196f3;border-radius:5px 5px 5px 5px;padding: 10px;" data-dismiss="modal">Save
+                Changes</button>
+            </div>
+          </div>
+          <div if.bind="companyCount == 0">
+            <dl class="dl-horizontal" style="margin-top: 5%;margin-left: 45%;margin-bottom: 5%;">
+              <dt class="c-red"> No Companies Found
+              </dt>
+          </div>
+          <div class="row" if.bind="viewCompaniesList.length > 0">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+              <ul class="pagination">
+                <li click.trigger="setPreviousPage()"><a href="" title="Previous Page"><i
+                      class="zmdi zmdi-fast-rewind"></i></a>
+                </li>
+                <li click.trigger="setFirstPage()"><a class="a-prevent" href="">${currentPage}</a></li>
+                <li click.trigger="setNextPage()"><a href="" title="Next Page"><i
+                      class="zmdi zmdi-fast-forward"></i></a>
+                </li>
+              </ul>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+              <div class="infos infos1">
+                <label style="color:red">Total ${companyCount} Companies,</label>
+                <label style="color:red;">and ${totalPages} Pages</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

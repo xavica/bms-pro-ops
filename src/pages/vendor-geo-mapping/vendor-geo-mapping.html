@@ -1,0 +1,64 @@
+<template>
+    <section id="content">
+        <div class="container">
+            <div class="card">
+                <div>
+                    <h2 class="well well-sm" style="color: #ff961e;">Vendor Geo Mapping</h2>
+                    <div class="row" style="margin-top: -23px;margin-left: 5px;">
+                        <div class="col-sm-12">
+                            <dl class="dl-vertical form-group">
+                                <dt class="p-t-5 summeryTable">
+                                    <h3 style="color: #ff961e;">Search Phone Number</h3>
+                                </dt>
+                                <dd>
+                                    <form>
+                                        <input type="number" maxlength="10" class="selectDrp inputtypenumarrowhide"
+                                            style="width:18%;font-size:120%;" placeholder=""
+                                            value.bind="searchFields.mobileNumber & validate"
+                                            oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength)"
+                                            onkeydown="return event.keyCode !== 69" />
+                                        <button class="btn btn-primary " type="submit" data-toggle="collapse"
+                                            style="margin-bottom: 9px;background-color:#ff961e"
+                                            click.delegate="searchMerchants()" data-target="#collapseExample"
+                                            aria-expanded="false" aria-controls="collapseExample">
+                                            <i click.delegate="searchMerchants()" type="submit"
+                                                class="zmdi zmdi-search"></i>
+                                        </button>
+                                        <div style="color: #c71310; font-size: 17px; padding-left: 5px"
+                                            repeat.for="merchant of searchedMerchants"
+                                            if.bind="merchant.businessTypeId == 2">This action cannot be performed for
+                                            this Merchant!!</div>
+
+                                    </form>
+                                </dd>
+                            </dl>
+                        </div>
+                        <br>
+                        <div class="col-sm-6 summerycard summeryTable " repeat.for="merchant of searchedMerchants"
+                            click.delegate="onClick(merchant)"
+                            style="margin-top: -2%;margin-left: 1%; border-radius: 2%"
+                            if.bind="merchant.businessTypeId != 2">
+                            <div class="col-sm-6">
+                                <div><label class="f-w-b "
+                                        style="font-size: 25px;color: #ff961e;">${merchant.businessName}</label>
+                                </div>
+                                <div><label
+                                        class="f-w-b c-black ">${merchant.address.street},${merchant.address.area}</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-1">
+                                <div>
+                                    <i class="zmdi zmdi-phone" style="margin-left: 600%;color: #ff961e;"></i>
+
+                                    <label class="f-w-b c-black col-sm-5" style="
+                                    margin-top: -110%;margin-left: 695%;">${merchant.mobileNumber}</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+            </div>
+        </div>
+    </section>
+</template>
