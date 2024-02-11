@@ -14,7 +14,7 @@ export class MerchantSearch {
   searchFields: MerchantSearchFields = new MerchantSearchFields();
   searchedMerchants: Array<Merchant> = [];
   bootStrapRenderer: BootstrapFormRenderer;
-  constructor(private router: Router, private userService: MerchantService,
+  constructor(private router: Router, private merchantService: MerchantService,
     private appState: ApplicationState, private controller: ValidationController) {
   }
 
@@ -46,7 +46,7 @@ export class MerchantSearch {
   }
   merchantsByQuery() {
     let queryFilters = this.constructQueryParams();
-    this.userService.usersQuery(queryFilters, UserType.ViwitoMerchants).then((result) => {
+    this.merchantService.usersQuery(queryFilters, UserType.ViwitoMerchants).then((result) => {
       if (result.length === 0) {
         swal('', 'No Records Found', 'info');
       }

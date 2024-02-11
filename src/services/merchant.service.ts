@@ -11,6 +11,7 @@ import {
   getMerchantLogoBaseUrl
 } from "../common/workflow-endpoints";
 import { QueryFilter } from '../entities';
+var firebase = require("firebase");
 
 interface ICompanyFb {
   name: string,
@@ -29,6 +30,7 @@ export class MerchantService extends DataService {
   constructor(httpClient: HttpClient, baseConfig: BaseConfig, _firebaseService: FirebaseService) {
     super(httpClient, baseConfig, _firebaseService);
     this.firebaseService = _firebaseService;
+    this.db = firebase.database();
   }
 
 
@@ -213,6 +215,36 @@ export class MerchantService extends DataService {
   async updateInventoryMappingFB(id: string, updateObj: Object) {
 
     return this.firebaseService.update(`${DB_PATH.MERCHANT}/${id}/inventoryVendorReferenceInfo`, updateObj)
+  }
+
+  async usersQuery(queryData: Array<QueryFilter>, userType: UserType): Promise<any> {
+    let dbPath = this.userTypeDictionary[userType];
+    if (userType === UserType.ViwitoMerchants) {
+      queryData.forEach((data) => {
+        data.fieldName = data.fieldName === "cityLowerCase"
+          ? "address/cityLowerCase" : data.fieldName;
+      });
+    }
+
+    const result = await this.queryDataPromises(queryData, dbPath);
+    let users: any = [];
+    result.forEach((snapValue) => {
+      let snapUsers = snapValue.val();
+      users = toCustomArray(snapUsers);
+    });
+    return users;
+  }
+
+  private queryDataPromises(queryData: Array<QueryFilter>, dbPath: any): Promise<any> {
+    let promises: any = [];
+    queryData.forEach((data) => {
+      let promise: any = this.db.ref(dbPath)
+        .orderByChild(data.fieldName)
+        .equalTo(data.fieldValue)
+        .once('value');
+      promises.push(promise);
+    });
+    return Promise.all(promises);
   }
 
 }
