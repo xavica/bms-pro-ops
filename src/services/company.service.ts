@@ -42,6 +42,23 @@ export class CompanyService extends DataService {
         }
     }
 
+    async getCompaniesItemService(){
+        try {
+            let url = `${this.config.itemService}/companies`;
+            const res = await this.get(url);
+            if (res.data.length == 0) {
+                throw "no company found in cockroachdb";
+            }
+            console.log("resresres:",res);
+            return res;
+    
+        } catch (error) {
+            console.log('Error get company from  :::', JSON.stringify(error));
+            throw error;
+        }
+    }
+
+
     async deleteCompanyInFb(companyId: string) {
 
         return this.firebaseService.delete(`${DB_PATH.COMPANIES}/${companyId}`)
@@ -216,5 +233,15 @@ export class CompanyService extends DataService {
             }
         })
     }
+    private mapCompaniesItemService(response: Array<any>) {
+
+        return response.map((c) => {
+            return {
+                name: c.data.attributes.name,
+                id: c.data.id
+            }
+        })
+    }
+
 
 }

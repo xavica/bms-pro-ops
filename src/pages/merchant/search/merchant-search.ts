@@ -1,101 +1,88 @@
 import { Aurelia, inject, NewInstance } from 'aurelia-framework';
 import { Router } from 'aurelia-router';
-import { ApplicationState } from '../../../common';
+import { ApplicationState, UserType } from '../../../common';
 import { BootstrapFormRenderer } from '../../../bootstrap-validation';
-import { ValidationController } from 'aurelia-validation';
+import { ValidationController, ValidationRules } from 'aurelia-validation';
 import { APP_ROUTES } from '../../../constants/app_routes';
-import { Merchant, MerchantSearchFields } from '../../../entities';
+import { Merchant, MerchantSearchFields, QueryFilter } from '../../../entities';
 import { MerchantService } from '../../../services';
+import * as swal from 'sweetalert';
 
-@inject(Router, ApplicationState, NewInstance.of(ValidationController), MerchantService)
+@inject(Router, MerchantService, ApplicationState, NewInstance.of(ValidationController))
 export class MerchantSearch {
   merchants: Array<Merchant> = [];
-  searchFields: {
-    id: string,
-    mobileNumber: string,
-    nameLowerCase
-    : string,
-    city: string
-  } = {
-      id: '',
-      mobileNumber: '',
-      nameLowerCase: '',
-      city: ''
-    };
+  searchFields: MerchantSearchFields = new MerchantSearchFields();
   searchedMerchants: Array<Merchant> = [];
   bootStrapRenderer: BootstrapFormRenderer;
-  isLoading: boolean = false;
-  merchantList: Array<any> = [];
-
-  constructor(private router: Router,
-    private appState: ApplicationState, private controller: ValidationController,
-    private merchantService: MerchantService) {
+  constructor(private router: Router, private userService: MerchantService,
+    private appState: ApplicationState, private controller: ValidationController) {
   }
 
-  async activate() {
+  activate() {
     this.bootStrapRenderer = new BootstrapFormRenderer();
     this.controller.addRenderer(this.bootStrapRenderer);
+    this.defineValidationRules();
   }
 
-  async searchMerchants() {
-    try {
-      let value = '';
-      if (this.searchFields == undefined) {
-
-        swal('', "Atleast One Field Value is Required", 'warning');
+  defineValidationRules() {
+    ValidationRules
+      .ensure('nameLowerCase').maxLength(20).matches(/^[a-zA-Z]+(?:[\s-][a-zA-Z]+)*$/).withMessage("This information is required")
+      .ensure('mobileNumber').matches(/^[0-9]*$/).minLength(5).maxLength(14).withMessage("Please enter valid mobile number")
+      .ensure('cityLowerCase').maxLength(20).matches(/^[a-zA-Z]+(?:[\s-][a-zA-Z]+)*$/).withMessage("This information is required")
+      .on(this.searchFields);
+  }
+  private constructQueryParams(): Array<QueryFilter> {
+    let params: Array<QueryFilter> = [];
+    for (var property in this.searchFields) {
+      if (this.searchFields[property]) {
+        let fieldValue = this.searchFields[property];
+        fieldValue = property === 'id' && fieldValue
+          || fieldValue && fieldValue.toLowerCase()
+          || '';
+        params.push(new QueryFilter(property, fieldValue));
       }
-      if (
-        !this.searchFields.id &&
-        !this.searchFields.mobileNumber &&
-        !this.searchFields.nameLowerCase
-        &&
-        !this.searchFields.city.toLowerCase()
-      ) {
-        swal("", "Atleast One Field Value is Required", "warning");
-        this.searchedMerchants = new Array<Merchant>();
+    }
+    return params;
+  }
+  merchantsByQuery() {
+    let queryFilters = this.constructQueryParams();
+    this.userService.usersQuery(queryFilters, UserType.ViwitoMerchants).then((result) => {
+      if (result.length === 0) {
+        swal('', 'No Records Found', 'info');
       }
+      console.log("result::",result)
+      this.searchedMerchants = result;
+    });
+  }
 
-      this.merchantList = await this.merchantService.getAllMerchantsFB();
-      if (!this.merchantList.length) {
-        swal("No Merchants Found")
-        return
-      }
-
-      this.isLoading = true;
-      const searchedMerchants: Array<any> = [];
-      for (const key in this.searchFields) {
-        value = this.searchFields[key];
-
-        if (value) {
-          value =
-            key === "nameLowerCase"
-              ? this.searchFields[key].toLowerCase().trim()
-              : key === "city"
-                ? this.searchFields[key].toLowerCase().trim()
-                : this.searchFields[key].trim();
-
-          const searchResult: Array<any> = this.merchantList.filter(m => key == "nameLowerCase" ? m.nameSearchKey.includes(value.toLocaleLowerCase()) : key == "city" ? m.citySearchKey.includes(value.toLocaleLowerCase()) : key == "id" ? m.id.includes(value) : key == "mobileNumber" ? m.mobileNumber.includes(value) : []);
-          searchedMerchants.push(searchResult);
-
-          if (searchResult.length == 0) {
-            swal('', 'No Records Found', 'info');
-          }
-
+  searchMerchants() {
+    if (!this.searchFields.id && !this.searchFields.nameLowerCase && !this.searchFields.mobileNumber && !this.searchFields.cityLowerCase) {
+      swal('', "Atleast One Field Value is Required", 'warning');
+      this.merchants = new Array<Merchant>();
+    }
+    else {
+      this.controller.validate().then((errors) => {
+        if (!errors.length) {
+          this.merchantsByQuery();
         }
-      }
-
-      this.searchedMerchants = [].concat.apply([], searchedMerchants);
-      this.isLoading = false;
-    } catch (error) {
-      console.log("error", error);
+        else {
+          swal('', "Invalid Input Details", 'warning');
+        }
+      });
     }
   }
 
-
   rowClick(merchant: Merchant) {
     this.appState.merchant = merchant;
+    this.appState.searchedMerchants = this.merchants;
+    console.log("this.merchants",this.merchants)
     this.router.navigateToRoute(APP_ROUTES.MERCHANT_DETAILS);
   }
+
+  // rowClick(merchant: Merchant) {
+  //   this.appState.merchant = merchant;
+  //   this.router.navigateToRoute(APP_ROUTES.MERCHANT_DETAILS);
+  // }
 
   clearClicked() {
     this.controller.reset();

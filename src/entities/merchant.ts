@@ -43,7 +43,7 @@ export class MerchantSearchFields {
     id: string;
     mobileNumber: string;
     nameLowerCase: string;
-    city: string;
+    cityLowerCase: string;
 }
 
 export class ICompanyFb {

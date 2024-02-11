@@ -2,7 +2,7 @@ import { Merchant } from './../entities/merchant';
 import { FirebaseService } from "./firebase.service";
 import { inject } from "aurelia-framework";
 import { DB_PATH } from "../constants";
-import { BaseConfig, toCustomArray, toCustomObject } from '../common';
+import { BaseConfig, UserType, toCustomArray, toCustomObject } from '../common';
 import { VrsMerchantAPIKeys } from '../entities/vrs-merchant-keys';
 import { HttpClient } from 'aurelia-fetch-client';
 import { DataService } from './data.service';
@@ -10,6 +10,7 @@ import {
   uploadMerchantLogoBaseUrl,
   getMerchantLogoBaseUrl
 } from "../common/workflow-endpoints";
+import { QueryFilter } from '../entities';
 
 interface ICompanyFb {
   name: string,
@@ -18,6 +19,13 @@ interface ICompanyFb {
 
 export class MerchantService extends DataService {
   firebaseService: FirebaseService;
+  db: any;
+  userTypeDictionary: any = {
+    1: DB_PATH.CUSTOMER,
+    3: DB_PATH.MERCHANT,
+    5: DB_PATH.CRM,
+    11: DB_PATH.VIWITO_MERCHANTS
+  };
   constructor(httpClient: HttpClient, baseConfig: BaseConfig, _firebaseService: FirebaseService) {
     super(httpClient, baseConfig, _firebaseService);
     this.firebaseService = _firebaseService;

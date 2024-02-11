@@ -30,7 +30,8 @@ export enum UserType {
   MarketingAgent = 6,
   SalesPerson = 7,
   Guest = 99,
-  CounterSaleCustomer = 8
+  CounterSaleCustomer = 8,
+  ViwitoMerchants = 11
 }
 export enum BMSUserType {
   Vendor = 5,

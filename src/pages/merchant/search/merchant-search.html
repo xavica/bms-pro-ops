@@ -17,7 +17,7 @@
                     <div class="row">
                         <div class="col-sm-12 typeOne ">
                             <h3><i class="md md-person m-r-5"></i> Basic Information</h3>
-                            <form class="form-horizontal" role="form">
+                            <!-- <form class="form-horizontal" role="form">
                                 <div class="pmbb-body p-l-30 Data">
                                     <div class="pmbb-edit">
                                         <div class="col-sm-6 ">
@@ -74,6 +74,56 @@
                                         </div>
                                     </div>
                                 </div>
+                            </form> -->
+                            <form class="form-horizontal" role="form">
+                                <div class="pmbb-body p-l-30 Data">
+                                    <div class="pmbb-edit">
+                                        <div class="col-sm-6 ">
+                                            <dl class="dl-horizontal form-group">
+                                                <dt class="p-t-10">Merchant ID</dt>
+                                                <dd>
+                                                    <div class="fg-line">
+                                                        <input type="text" class="form-control" placeholder="" value.bind="searchFields.id & validate">
+                                                    </div>
+                                                </dd>
+                                            </dl>
+                                            <dl class="dl-horizontal form-group">
+                                                <dt class="p-t-5" style="margin-top:10px;">City</dt>
+                                                <dd>
+                                                    <div class="fg-line">
+                                                        <input type="text" class="form-control" placeholder="" value.bind="searchFields.cityLowerCase & validate">
+                                                    </div>
+                                                </dd>
+                                            </dl>
+                                            <!--<dl class="dl-horizontal">
+                                                <dt class="p-t-10">Dealer ID</dt>
+                                                <dd>
+                                                    <div class="fg-line">
+                                                        <input type="text" class="form-control" placeholder="" value.bind="searchFields.dealerId & validate">
+                                                    </div>
+                                                </dd>
+                                            </dl>-->
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <dl class="dl-horizontal form-group">
+                                                <dt class="p-t-10">Name</dt>
+                                                <dd>
+                                                    <div class="fg-line">
+                                                        <input type="text" class="form-control" placeholder="" value.bind="searchFields.nameLowerCase & validate">
+                                                    </div>
+                                                </dd>
+                                            </dl>
+                                            <dl class="dl-horizontal form-group">
+                                                <dt class="p-t-5" style="margin-top:10px;">Mobile Number</dt>
+                                                <dd>
+                                                    <div class="fg-line">
+                                                        <input type="text" class="form-control" placeholder="" value.bind="searchFields.mobileNumber & validate">
+                                                    </div>
+                                                </dd>
+                                            </dl>
+                                        </div>
+                                    </div>
+                                </div>
                             </form>
                         </div>
                     </div>
@@ -87,7 +137,7 @@
                 </div>
                 <br>
                 <div class="loader" if.bind="isLoading"></div>
-                <div class="card-body table-responsive tableHeadings" tabindex="0"
+                <!-- <div class="card-body table-responsive tableHeadings" tabindex="0"
                     style="overflow: hidden; outline: none;">
                     <table class="table" show.bind="searchedMerchants.length > 0 && !isLoading">
                         <thead>
@@ -104,6 +154,34 @@
                             <tr class="merchant clickable-row" repeat.for="merchant of searchedMerchants"
                                 class.bind="merchant.isActive ? 'ownFa':'partialFa'"
                                 click.delegate="rowClick(merchant)">
+                                <td>${merchant.businessName}</td>
+                                <td>${merchant.mobileNumber}</td>
+                                <td> ${merchant.businessTypeId | merchantBusinessType}</td>
+                                <td>${merchant.address.street},${merchant.address.area}</td>
+                                <td>${merchant.address.city}</td>
+                                <td>${merchant.address.state}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div> -->
+                <div class="card-body table-responsive tableHeadings" tabindex="0" style="overflow: hidden; outline: none;">
+                    <table class="table" show.bind="searchedMerchants.length > 0">
+                        <thead>
+                            <tr>
+                                <!-- <th>Merchant Type</th>
+                                <th>Dealer Id</th> -->
+                                <th>Business Name</th>
+                                <th>Mobile Number</th>
+                                <th>Business Name</th>
+                                <th>Address</th>
+                                <th>City</th>
+                                <th>State</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="merchant" repeat.for="merchant of searchedMerchants" class.bind="merchant.isActive ? 'ownFa':'partialFa'" click.delegate="rowClick(merchant)">
+                                <!-- <td>${merchant.merchantTypeId | orderType}</td>
+                                <td>${merchant.dealerId}</td> -->
                                 <td>${merchant.businessName}</td>
                                 <td>${merchant.mobileNumber}</td>
                                 <td> ${merchant.businessTypeId | merchantBusinessType}</td>
