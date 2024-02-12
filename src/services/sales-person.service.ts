@@ -97,7 +97,7 @@ export class SalesPersonService extends DataService {
   }
 
   async getMerchantSalesPersonFB(merchantId: string) {
-    const response = await this.firebaseService.getData(`${DB_PATH.MERCHANT}/${merchantId}/salesPersons`);
+    const response = await this.firebaseService.getData(`${DB_PATH.BMS_MERCHANT}/${merchantId}/salesPersons`);
 
     return response && toCustomArray(response);
   }
@@ -187,7 +187,7 @@ export class SalesPersonService extends DataService {
 
       // Add in Sales Person in Merchant Firebase node
       const merchantSalesPerson: IMerchantSalesPerson | any = this.mapToMerchantSalesPerson(salesPerson.id, salesPerson.name, salesPerson.mobileNumber, vrsId);
-      await this.firebaseService.update(`${DB_PATH.MERCHANT}/${distributorId}/salesPersons/${merchantSalesPerson.id}`, merchantSalesPerson)
+      await this.firebaseService.update(`${DB_PATH.BMS_MERCHANT}/${distributorId}/salesPersons/${merchantSalesPerson.id}`, merchantSalesPerson)
 
     } catch (error) {
 
@@ -211,7 +211,7 @@ export class SalesPersonService extends DataService {
     await this.firebaseService.update(`${DB_PATH.CUSTOMER}/${salesPersonId}/salesAidInfo`, manufactureSalesPerson);
 
     // Add in Merchant Node
-    await this.firebaseService.update(`${DB_PATH.MERCHANT}/${manufacture.id}/salesPersons/${merchantSalesPerson.id}`, merchantSalesPerson)
+    await this.firebaseService.update(`${DB_PATH.BMS_MERCHANT}/${manufacture.id}/salesPersons/${merchantSalesPerson.id}`, merchantSalesPerson)
   }
 
   // To Tag Distributor to Manufacture SalesPerson
@@ -219,7 +219,7 @@ export class SalesPersonService extends DataService {
     try {
 
       // Add SalesPerson to Vrs Site of Distributor;
-      const distributor: Merchant = await this.firebaseService.getData(`${DB_PATH.MERCHANT}/${distributorId}`);
+      const distributor: Merchant = await this.firebaseService.getData(`${DB_PATH.BMS_MERCHANT}/${distributorId}`);
       const vrsApiKeys: VrsMerchantAPIKeys = distributor.vrsMappingInfo;
       const shotCode: string = `${manufacture.name.slice(0, 5)}_${salesPerson.name.slice(0, 5)}`
       const vrsSalesPerson = { sales_person_name: salesPerson.name, short_code: shotCode, internal_id: salesPerson.id }
@@ -231,7 +231,7 @@ export class SalesPersonService extends DataService {
       })
 
       // Add Distributor Details in Merchant Sales Person info node
-      await this.firebaseService.update(`${DB_PATH.MERCHANT}/${manufacture.id}/salesPersons/${salesPerson.id}`, {
+      await this.firebaseService.update(`${DB_PATH.BMS_MERCHANT}/${manufacture.id}/salesPersons/${salesPerson.id}`, {
         id: salesPerson.id,
         mobilenumber: salesPerson.mobileNumber,
         name: salesPerson.name,
@@ -239,7 +239,7 @@ export class SalesPersonService extends DataService {
 
 
       // To Update distributor in Manufacture node - TODO have to refactor
-      await this.firebaseService.update(`${DB_PATH.MERCHANT}/${manufacture.id}/salesPersons/${salesPerson.id}/distributors/${distributor.id}`, {
+      await this.firebaseService.update(`${DB_PATH.BMS_MERCHANT}/${manufacture.id}/salesPersons/${salesPerson.id}/distributors/${distributor.id}`, {
         id: distributor.id, name: distributor.businessName, vrsId
       })
     } catch (error) {
@@ -257,7 +257,7 @@ export class SalesPersonService extends DataService {
       // Delete in Customer Node
       await this.firebaseService.insert(`${DB_PATH.CUSTOMER}/${salesPersonId}/salesAidInfo`, null);
 
-      await this.firebaseService.insert(`${DB_PATH.MERCHANT}/${distributorId}/salesPersons/${salesPersonId}`, null);
+      await this.firebaseService.insert(`${DB_PATH.BMS_MERCHANT}/${distributorId}/salesPersons/${salesPersonId}`, null);
 
     } catch (error) {
       console.log(` Sales Person Service deleteDistributorSalesPerson error ::: `, error);
@@ -270,7 +270,7 @@ export class SalesPersonService extends DataService {
   async deleteManufactureSalesPerson(salesPersonId: string, manufactureId: string, distributorIdList: Array<string>) {
     try {
       for (const distributorId of distributorIdList) {
-        const distributor: Merchant = await this.firebaseService.getData(`${DB_PATH.MERCHANT}/${distributorId}`);
+        const distributor: Merchant = await this.firebaseService.getData(`${DB_PATH.BMS_MERCHANT}/${distributorId}`);
         const vrsApiKeys: VrsMerchantAPIKeys = distributor.vrsMappingInfo;
 
         await this.deactivateSalesPersonVRS(salesPersonId, vrsApiKeys);
@@ -278,7 +278,7 @@ export class SalesPersonService extends DataService {
 
       // Delete in Customer Node
       await this.firebaseService.delete(`${DB_PATH.CUSTOMER}/${salesPersonId}/salesAidInfo`);
-      await this.firebaseService.delete(`${DB_PATH.MERCHANT}/${manufactureId}/salesPersons/${salesPersonId}`);
+      await this.firebaseService.delete(`${DB_PATH.BMS_MERCHANT}/${manufactureId}/salesPersons/${salesPersonId}`);
 
     } catch (error) {
 
@@ -291,7 +291,7 @@ export class SalesPersonService extends DataService {
   async deleteDistributorFromManufactureSalesPerson(salesPersonId: string, manufactureId: string, distributorId: string) {
 
     try {
-      const distributor: Merchant = await this.firebaseService.getData(`${DB_PATH.MERCHANT}/${distributorId}`);
+      const distributor: Merchant = await this.firebaseService.getData(`${DB_PATH.BMS_MERCHANT}/${distributorId}`);
 
       const vrsApiKeys: VrsMerchantAPIKeys = distributor.vrsMappingInfo;
 
@@ -300,7 +300,7 @@ export class SalesPersonService extends DataService {
       // Delete in Customer Node
       await this.firebaseService.delete(`${DB_PATH.CUSTOMER}/${salesPersonId}/salesAidInfo/manufacture/distributors/${distributorId}`);
 
-      await this.firebaseService.delete(`${DB_PATH.MERCHANT}/${manufactureId}/salesPersons/${salesPersonId}/distributors/${distributorId}`);
+      await this.firebaseService.delete(`${DB_PATH.BMS_MERCHANT}/${manufactureId}/salesPersons/${salesPersonId}/distributors/${distributorId}`);
 
     } catch (error) {
       console.log(` Sales Person Service deleteDistributorSalesPerson error ::: `, error);

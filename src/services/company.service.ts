@@ -100,7 +100,7 @@ export class CompanyService extends DataService {
     async addMerchantCompanyInFb(merchantId: string, companiesObj: any) {
         try {
 
-            const dbPath: string = `${DB_PATH.MERCHANT}/${merchantId}/companies`;
+            const dbPath: string = `${DB_PATH.BMS_MERCHANT}/${merchantId}/companies`;
 
             return this.firebaseService.update(dbPath, companiesObj); // put update why because if i use insert it is replacing previous companies
 
@@ -113,7 +113,7 @@ export class CompanyService extends DataService {
     async getMerchantCompanyInFb(merchantId: string) {
         try {
 
-            const dbPath: string = `${DB_PATH.MERCHANT}/${merchantId}/companies`;
+            const dbPath: string = `${DB_PATH.BMS_MERCHANT}/${merchantId}/companies`;
 
             const response = await this.firebaseService.getData(dbPath);
 
@@ -195,6 +195,30 @@ export class CompanyService extends DataService {
 
             return [];
         }
+    }
+
+
+    async getCompaniesItemService() {
+        try {
+            let url = `${this.config.itemService}/companies`;
+            const res = await this.get(url);
+
+            return this.mapCompaniesItemService(res["data"]);
+
+        } catch (error) {
+            console.log('Error get company from  :::', JSON.stringify(error));
+            throw error;
+        }
+    }
+
+    private mapCompaniesItemService(response: Array<any>) {
+
+        return response.map((c) => {
+            return {
+                name: c.attributes.name,
+                id: c.id
+            }
+        })
     }
 
 

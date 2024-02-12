@@ -80,7 +80,8 @@ export class MerchantCompany {
     }
     async checkCompanyMasterList() {
         //const companiesList: Array<ICompany> = await this.companyService.getCompaniesFb();
-        const companiesList: Array<any> = await this.companyService.getCompaniesPg();
+        // const companiesList: Array<any> = await this.companyService.getCompaniesPg();
+        const companiesList: Array<any> = await this.companyService.getCompaniesItemService();
         const merchantMappedCompanyIds: Array<string> = this.merchantCompaniesList.map((c) => c.id);
         this.companiesMasterList = companiesList.filter((c) => !merchantMappedCompanyIds.includes(c.id));
     }

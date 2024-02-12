@@ -18,5 +18,4 @@ export const APP_ROUTES = {
   DISTRIBUTOR_SEARCH: "distributor-search",
   CREATE_PROMOTION: "create-promotion",
   PROMOTION_DETAILS: "promotion-details",
-  MERCHANT_Profile: "merchant-Profile",
 }

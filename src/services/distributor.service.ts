@@ -12,18 +12,18 @@ export class DistributorService {
 
   async getDistributorsFromFirebase() {
 
-    return this.firebaseService.getDataByFilters(`${DB_PATH.MERCHANT}`, "businessTypeId", MerchantBusinessType.Distributor);
+    return this.firebaseService.getDataByFilters(`${DB_PATH.BMS_MERCHANT}`, "businessTypeId", MerchantBusinessType.Distributor);
   }
 
   async getDistributorByIdFB(id: string) {
 
-    return this.firebaseService.getData(`${DB_PATH.MERCHANT}/${id}`);
+    return this.firebaseService.getData(`${DB_PATH.BMS_MERCHANT}/${id}`);
   }
 
 
   async updateDistributorFB(id: string, updateObj: Object) {
 
-    return this.firebaseService.update(`${DB_PATH.MERCHANT}/${id}`, updateObj)
+    return this.firebaseService.update(`${DB_PATH.BMS_MERCHANT}/${id}`, updateObj)
   }
 
 
