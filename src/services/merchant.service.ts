@@ -2,7 +2,7 @@ import { Merchant } from './../entities/merchant';
 import { FirebaseService } from "./firebase.service";
 import { inject } from "aurelia-framework";
 import { DB_PATH } from "../constants";
-import { BaseConfig, UserType, toCustomArray, toCustomObject } from '../common';
+import { BaseConfig, toCustomArray, toCustomObject } from '../common';
 import { VrsMerchantAPIKeys } from '../entities/vrs-merchant-keys';
 import { HttpClient } from 'aurelia-fetch-client';
 import { DataService } from './data.service';
@@ -10,8 +10,6 @@ import {
   uploadMerchantLogoBaseUrl,
   getMerchantLogoBaseUrl
 } from "../common/workflow-endpoints";
-import { QueryFilter } from '../entities';
-var firebase = require("firebase");
 
 interface ICompanyFb {
   name: string,
@@ -20,17 +18,9 @@ interface ICompanyFb {
 
 export class MerchantService extends DataService {
   firebaseService: FirebaseService;
-  db: any;
-  userTypeDictionary: any = {
-    1: DB_PATH.CUSTOMER,
-    3: DB_PATH.MERCHANT,
-    5: DB_PATH.CRM,
-    11: DB_PATH.VIWITO_MERCHANTS
-  };
   constructor(httpClient: HttpClient, baseConfig: BaseConfig, _firebaseService: FirebaseService) {
     super(httpClient, baseConfig, _firebaseService);
     this.firebaseService = _firebaseService;
-    this.db = firebase.database();
   }
 
 
@@ -76,7 +66,7 @@ export class MerchantService extends DataService {
           : searchFiled;
 
       const response = await this.firebaseService.getDataByFilters(
-        `${DB_PATH.MERCHANT}`,
+        `${DB_PATH.VIWITO_MERCHANTS}`,
         filed,
         searchValue
       );
@@ -97,7 +87,7 @@ export class MerchantService extends DataService {
   async getAllMerchantsFB() {
     try {
 
-      const response = await this.firebaseService.getData(`${DB_PATH.MERCHANT}`);
+      const response = await this.firebaseService.getData(`${DB_PATH.VIWITO_MERCHANTS}`);
       const merchants: Array<any> = [];
       for (var key in response) {
         const mappedMerchant: Merchant = await this.mapMerchant(response[key]);
@@ -215,36 +205,6 @@ export class MerchantService extends DataService {
   async updateInventoryMappingFB(id: string, updateObj: Object) {
 
     return this.firebaseService.update(`${DB_PATH.MERCHANT}/${id}/inventoryVendorReferenceInfo`, updateObj)
-  }
-
-  async usersQuery(queryData: Array<QueryFilter>, userType: UserType): Promise<any> {
-    let dbPath = this.userTypeDictionary[userType];
-    if (userType === UserType.ViwitoMerchants) {
-      queryData.forEach((data) => {
-        data.fieldName = data.fieldName === "cityLowerCase"
-          ? "address/cityLowerCase" : data.fieldName;
-      });
-    }
-
-    const result = await this.queryDataPromises(queryData, dbPath);
-    let users: any = [];
-    result.forEach((snapValue) => {
-      let snapUsers = snapValue.val();
-      users = toCustomArray(snapUsers);
-    });
-    return users;
-  }
-
-  private queryDataPromises(queryData: Array<QueryFilter>, dbPath: any): Promise<any> {
-    let promises: any = [];
-    queryData.forEach((data) => {
-      let promise: any = this.db.ref(dbPath)
-        .orderByChild(data.fieldName)
-        .equalTo(data.fieldValue)
-        .once('value');
-      promises.push(promise);
-    });
-    return Promise.all(promises);
   }
 
 }
