@@ -3,9 +3,9 @@ import { Router } from 'aurelia-router';
 import { states, MerchantBusinessType, uuidv4, isValidName, isValidEmail, isValidMobileNumber, isValidAddress, isValidGstNumber, isValidPincode, BMSUserType } from '../../../common';
 import { APP_ROUTES } from '../../../constants';
 import { Merchant, Address, RedisEntity } from '../../../entities';
-import { MerchantService, UserService } from '../../../services';
+import { GeoService, MerchantService, UserService } from '../../../services';
 
-@inject(MerchantService, Router, UserService)
+@inject(MerchantService, Router, GeoService, UserService)
 export class CreateMerchant {
   merchant: Merchant = new Merchant();
   isLoader: boolean = false;
@@ -17,6 +17,7 @@ export class CreateMerchant {
   constructor(
     private merchantService: MerchantService,
     private router: Router,
+    private geoService: GeoService,
     private userService: UserService,
   ) {
   }
@@ -54,16 +55,14 @@ export class CreateMerchant {
         this.merchant.id = responseUid.uid;
 
         if (this.merchant.id.length > 0) {
-          merchantMappedEntity.id = this.merchant.id;  
+          merchantMappedEntity.id = this.merchant.id;
           await this.merchantService.addMerchantToFireBase(this.merchant.id, merchantMappedEntity);
 
-// Saving in the viiwto PG throught viwito core Api
-
-          // if (this.merchant.businessTypeId !== MerchantBusinessType.Manufacturer) {
-          //   const response = await this.geoService.addVendor({ refId: this.merchant.id, name: this.merchant.businessName, mobileNumber: this.merchant.mobileNumber, businessName: this.merchant.businessName });
-          //   const redisEntity = this.mapRedisEntity(this.merchant);
-          //   const res = await this.geoService.addVendorInRedis(redisEntity);
-          // }
+          if (this.merchant.businessTypeId !== MerchantBusinessType.Manufacturer) {
+            // const response = await this.geoService.addVendor({ refId: this.merchant.id, name: this.merchant.businessName, mobileNumber: this.merchant.mobileNumber, businessName: this.merchant.businessName });
+            // const redisEntity = this.mapRedisEntity(this.merchant);
+            //const res = await this.geoService.addVendorInRedis(redisEntity);
+          }
           this.isLoading = false;
 
           swal("", `Merchant Registered Successfully`, "success");

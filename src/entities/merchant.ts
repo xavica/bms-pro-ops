@@ -43,7 +43,6 @@ export class MerchantSearchFields {
     id: string;
     mobileNumber: string;
     nameLowerCase: string;
-    cityLowerCase: string;
     city: string;
 }
 

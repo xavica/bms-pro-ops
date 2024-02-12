@@ -33,12 +33,9 @@ export class MerchantCompany {
     async activate(model: Merchant) {
         this.isLoading = true;
         this.merchant = model;
-        console.log("this.merchant::",this.merchant)
         this.roleTypeId = this.appState.crm.roleTypeId || 0;
         this.visualButtonBasedOnRole();
-        this.merchantCompaniesList = this.merchant.companies;
-        console.log("this.merchantCompaniesListthis.merchantCompaniesList::",this.merchantCompaniesList)
-        this.companyService.getCompaniesItemService();
+        this.merchantCompaniesList = this.merchant.companies.sort();
         this.isLoading = false;
 
     }

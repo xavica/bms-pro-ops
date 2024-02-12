@@ -32,7 +32,7 @@ const rootDir = path.resolve();
 const srcDir = path.resolve('src');
 const outDir = path.resolve('dist');
 if (ENV === 'test' || ENV === 'production' || ENV === 'int' || ENV === 'staging') {
-  baseUrl = "/bms-pro-ops/"
+  baseUrl = "/pro-ops/"
 }
 console.log('BaseUrl Webpack ::: ', baseUrl);
 
