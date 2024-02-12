@@ -45,7 +45,7 @@ export class MerchantService extends DataService {
 
   async addMerchantToFireBase(merchantId: string, merchantObj: any = {}) {
     return this.firebaseService.insert(
-      `${DB_PATH.MERCHANT}/${merchantId}`,
+      `${DB_PATH.VIWITO_MERCHANTS}/${merchantId}`,
       merchantObj
     );
   }
