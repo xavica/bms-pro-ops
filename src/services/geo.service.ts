@@ -90,7 +90,7 @@ export class GeoService extends DataService {
   }
 
   async addVendorInRedis(merchantObj: RedisEntity | any) {
-    const fullUrl = `${this.config.redisApiUrl}/api/vendors/create`;
+    const fullUrl = `${this.config.redisApiUrl}/vendors/create`;
 
     return this.post(fullUrl, merchantObj);
   }

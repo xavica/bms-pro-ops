@@ -61,9 +61,8 @@ export class CreateMerchant {
           if (this.merchant.businessTypeId !== MerchantBusinessType.Manufacturer) {
             const response = await this.geoService.addVendor({ refId: this.merchant.id, name: this.merchant.businessName, mobileNumber: this.merchant.mobileNumber, businessName: this.merchant.businessName });
 
-            //Api Changes Required
-            //const redisEntity = this.mapRedisEntity(this.merchant);
-            //const res = await this.geoService.addVendorInRedis(redisEntity);
+            const redisEntity = this.mapRedisEntity(this.merchant);
+            const res = await this.geoService.addVendorInRedis(redisEntity);
           }
           this.isLoading = false;
 
@@ -118,8 +117,7 @@ export class CreateMerchant {
   }
   private mapRedisEntity(merchant) {
     const id = merchant.id;
-    const result = {};
-    result[id] = {
+    const result = {
       id: id,
       name: merchant.name,
       businessName: merchant.businessName.trim(),
