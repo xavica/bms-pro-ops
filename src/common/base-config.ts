@@ -21,29 +21,29 @@ export class BaseConfig {
   };
   constructor() {
     // let ENV = "development";
-   let firebaseConfig = {
-    apiKey: "AIzaSyDvil7FitRz5FvCvqV_elC9e9877TtImMU",
-    authDomain: "devqwipo.firebaseapp.com",
-    databaseURL: "https://devqwipo.firebaseio.com",
-    projectId: "devqwipo",
-    storageBucket: "devqwipo.appspot.com",
-    messagingSenderId: "95302609868",
-    appId: "1:95302609868:web:57d524c8593ac77f2ecb69",
-    measurementId: "G-2G1N0P1XC9"
-  };
+    let firebaseConfig = {
+      apiKey: "AIzaSyDvil7FitRz5FvCvqV_elC9e9877TtImMU",
+      authDomain: "devqwipo.firebaseapp.com",
+      databaseURL: "https://devqwipo.firebaseio.com",
+      projectId: "devqwipo",
+      storageBucket: "devqwipo.appspot.com",
+      messagingSenderId: "95302609868",
+      appId: "1:95302609868:web:57d524c8593ac77f2ecb69",
+      measurementId: "G-2G1N0P1XC9"
+    };
     let serveryKey = "AAAAFjB6a8w:APA91bF9gXudBrlnMmotpcB9oUK7ctvQDimWx3JVGuHL8mAaBsASkQExkP9cUNpuR3yo2-PNvmY1pzj8gnBb8nNnda90W22TcIY9voPBfht12UubMU-gey351hXGdbS54Wl3b5hgLJY8Vujv7LIvdCcWuT6SKRAs0Q";
     let mapsApiKey = "AIzaSyDAm9IOMXXFlj_ZBe6bVnlp_ghx2Bpql9g",
       containerUrl = "https://smamidi.blob.core.windows.net/qwipo/",
       coreUrl = "https://api.dev.viwito.com/api",
       geoUrl = "https://geo.dev.viwito.com/api/v1",
-      redisUrl = "https://redis.dev.viwito.com",
+      redisUrl = "https://cache.dev.bms.viwito.com/api",
       itemService = "https://item-service.dev.bms.viwito.com/api/"
 
     if (ENV === "test") {
       // ENV = "test";
       coreUrl = "https://api.test.viwito.com/api";
       geoUrl = "https://geo.test.viwito.com/api/v1";
-      redisUrl = "";
+      redisUrl = "https://cache.test.bms.viwito.com/api";
       firebaseConfig = {
         apiKey: "AIzaSyCQxan-AN2bk2GTyav2PfKU2raT_QYlNiA",
         authDomain: "test-qwipo.firebaseapp.com",
@@ -100,7 +100,7 @@ export class BaseConfig {
       serveryKey = 'AAAAp3I90SM:APA91bHvVfy5SObF4uT-GwCXTrCZn4rRjjBVln8LKS70nZ4520BvYp-wwp0n13e-8CGtvCV1zBqhj6Xcp4vFNWl8nGUoQMYeJAlGRzSRYTmBHRV2Y-FtnnKzXMKA27MtS6ytfWVy4p9M';
       mapsApiKey = 'AIzaSyDbV-CkDA4kFmMdmjgl_MSWIfqUh9YNSpE';
       containerUrl = "https://xavica.blob.core.windows.net/qwipo/",
-      itemService = ""
+        itemService = ""
 
     }
     this._current = {

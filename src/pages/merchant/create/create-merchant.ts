@@ -59,8 +59,10 @@ export class CreateMerchant {
           await this.merchantService.addMerchantToFireBase(this.merchant.id, merchantMappedEntity);
 
           if (this.merchant.businessTypeId !== MerchantBusinessType.Manufacturer) {
-            // const response = await this.geoService.addVendor({ refId: this.merchant.id, name: this.merchant.businessName, mobileNumber: this.merchant.mobileNumber, businessName: this.merchant.businessName });
-            // const redisEntity = this.mapRedisEntity(this.merchant);
+            const response = await this.geoService.addVendor({ refId: this.merchant.id, name: this.merchant.businessName, mobileNumber: this.merchant.mobileNumber, businessName: this.merchant.businessName });
+
+            //Api Changes Required
+            //const redisEntity = this.mapRedisEntity(this.merchant);
             //const res = await this.geoService.addVendorInRedis(redisEntity);
           }
           this.isLoading = false;
