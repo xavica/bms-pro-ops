@@ -204,7 +204,7 @@ export class MerchantService extends DataService {
 
   async updateInventoryMappingFB(id: string, updateObj: Object) {
 
-    return this.firebaseService.update(`${DB_PATH.BMS_MERCHANT}/${id}/inventoryVendorReferenceInfo`, updateObj)
+    return this.firebaseService.update(`${DB_PATH.BMS_MERCHANT}/${id}/inventoryMapping`, updateObj)
   }
 
 }

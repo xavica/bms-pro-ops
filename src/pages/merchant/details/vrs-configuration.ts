@@ -266,12 +266,12 @@ export class MerchantVrsConfiguration {
 
         await this.customerService.insertCustomerVrs(inventoryVendorInfo, this.merchant.vrsMappingInfo);
 
-        const inventoryVendorDetails = {
-          id: this.selectedInventoryVendor.id,
-          name: this.selectedInventoryVendor.name
+        const inventoryMapping = {
+          vendorId: this.selectedInventoryVendor.id,
+          vendorName: this.selectedInventoryVendor.name
         };
 
-        await this.merchantService.updateInventoryMappingFB(this.merchant.id, inventoryVendorDetails);
+        await this.merchantService.updateInventoryMappingFB(this.merchant.id, inventoryMapping);
 
         swal("", "Vendor Tagged Successfully", "success");
       } else {

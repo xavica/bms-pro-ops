@@ -23,11 +23,11 @@ export class Merchant {
     address: Address = new Address();
     vrsMappingInfo: VrsMerchantAPIKeys = new VrsMerchantAPIKeys();
     password: string = "";
-    inventoryVendorReferenceInfo: InventoryReference = new InventoryReference();
+    inventoryMapping: InventoryReference = new InventoryReference();
 }
 export class InventoryReference {
-    id: string = "";
-    name: string = ""
+    vendorId: string = "";
+    vendorName: string = ""
 }
 
 export class Company {
