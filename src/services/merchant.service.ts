@@ -28,14 +28,14 @@ export class MerchantService extends DataService {
 
   async getUser(uid: string) {
 
-    const response = await this.firebaseService.getData(`${DB_PATH.VIWITO_MERCHANTS}/${uid}`);
+    const response = await this.firebaseService.getData(`${DB_PATH.BMS_MERCHANT}/${uid}`);
 
     return this.mapMerchant(response);
   }
 
   async addMerchantToFireBase(merchantId: string, merchantObj: any = {}) {
     return this.firebaseService.insert(
-      `${DB_PATH.VIWITO_MERCHANTS}/${merchantId}`,
+      `${DB_PATH.BMS_MERCHANT}/${merchantId}`,
       merchantObj
     );
   }
@@ -66,7 +66,7 @@ export class MerchantService extends DataService {
           : searchFiled;
 
       const response = await this.firebaseService.getDataByFilters(
-        `${DB_PATH.VIWITO_MERCHANTS}`,
+        `${DB_PATH.BMS_MERCHANT}`,
         filed,
         searchValue
       );
@@ -87,7 +87,7 @@ export class MerchantService extends DataService {
   async getAllMerchantsFB() {
     try {
 
-      const response = await this.firebaseService.getData(`${DB_PATH.VIWITO_MERCHANTS}`);
+      const response = await this.firebaseService.getData(`${DB_PATH.BMS_MERCHANT}`);
       const merchants: Array<any> = [];
       for (var key in response) {
         const mappedMerchant: Merchant = await this.mapMerchant(response[key]);
@@ -112,8 +112,8 @@ export class MerchantService extends DataService {
       // make companies as Object and update in DB
       const companiesObj: Record<string, ICompanyFb> = toCustomObject(merchantInDb.companies);
 
-      await this.firebaseService.delete(`${DB_PATH.VIWITO_MERCHANTS}/${merchantInDb.id}/companies`);
-      await this.firebaseService.update(`${DB_PATH.VIWITO_MERCHANTS}/${merchantInDb.id}/companies`, companiesObj);
+      await this.firebaseService.delete(`${DB_PATH.BMS_MERCHANT}/${merchantInDb.id}/companies`);
+      await this.firebaseService.update(`${DB_PATH.BMS_MERCHANT}/${merchantInDb.id}/companies`, companiesObj);
 
       return merchantInDb;
     }
@@ -126,12 +126,12 @@ export class MerchantService extends DataService {
 
   async updateVrsMappingFB(id: string, updateObj: Object) {
 
-    return this.firebaseService.update(`${DB_PATH.VIWITO_MERCHANTS}/${id}/vrsMappingInfo`, updateObj)
+    return this.firebaseService.update(`${DB_PATH.BMS_MERCHANT}/${id}/vrsMappingInfo`, updateObj)
   }
 
   async getMerchant(uid: string) {
 
-    const response = await this.firebaseService.getData(`${DB_PATH.VIWITO_MERCHANTS}/${uid}`);
+    const response = await this.firebaseService.getData(`${DB_PATH.BMS_MERCHANT}/${uid}`);
 
     return response;
   }
@@ -139,7 +139,7 @@ export class MerchantService extends DataService {
   async getMerchantByVrsApiUrl(apiUrl: string) {
 
     const searchFiled: string = "vrsMappingInfo/apiUrl";
-    const response = await this.firebaseService.getDataByFilters(`${DB_PATH.VIWITO_MERCHANTS}`, searchFiled, apiUrl);
+    const response = await this.firebaseService.getDataByFilters(`${DB_PATH.BMS_MERCHANT}`, searchFiled, apiUrl);
 
     return response && toCustomArray(response);
   }
@@ -204,7 +204,7 @@ export class MerchantService extends DataService {
 
   async updateInventoryMappingFB(id: string, updateObj: Object) {
 
-    return this.firebaseService.update(`${DB_PATH.VIWITO_MERCHANTS}/${id}/inventoryVendorReferenceInfo`, updateObj)
+    return this.firebaseService.update(`${DB_PATH.BMS_MERCHANT}/${id}/inventoryVendorReferenceInfo`, updateObj)
   }
 
 }

@@ -14,5 +14,5 @@ export const DB_PATH = {
   MESSAGE_HANDLER_FOR_CLOUD_FUNCTIONS: "MessageHandlerForCloudFunctions",
   COMPANIES: "Companies",
   SET_CUSTOMERS: "Customers",
-  VIWITO_MERCHANTS: "ViwitoMerchants"
+  BMS_MERCHANT: "BmsMerchant"
 };
